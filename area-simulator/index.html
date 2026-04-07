@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Area Explorer – Learn About Area!</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', 'Comic Sans MS', Arial, sans-serif;
+    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px;
+    overflow-x: hidden;
+  }
+
+  h1 {
+    font-size: clamp(1.4rem, 4vw, 2rem);
+    color: #e65100;
+    text-align: center;
+    margin-bottom: 8px;
+    text-shadow: 1px 1px 0 #fff;
+  }
+
+  /* ── Shape Tabs ── */
+  .tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .tab-btn {
+    font-size: clamp(1rem, 3vw, 1.25rem);
+    padding: 10px 28px;
+    border: 3px solid #e65100;
+    border-radius: 30px;
+    background: #fff;
+    color: #e65100;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .tab-btn.active, .tab-btn:hover {
+    background: #e65100;
+    color: #fff;
+  }
+
+  /* ── Controls ── */
+  .controls {
+    background: #fff;
+    border-radius: 18px;
+    padding: 16px 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.1);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    justify-content: center;
+    margin-bottom: 14px;
+    max-width: 560px;
+    width: 100%;
+  }
+  .slider-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 140px;
+    flex: 1;
+  }
+  .slider-group label {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+  }
+  .slider-group input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 14px;
+    border-radius: 7px;
+    background: linear-gradient(90deg, #ffcc80, #ef6c00);
+    outline: none;
+    cursor: pointer;
+  }
+  .slider-group input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: #e65100;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,.3);
+    cursor: grab;
+  }
+  .slider-group input[type=range]::-moz-range-thumb {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: #e65100;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,.3);
+    cursor: grab;
+  }
+  .slider-val {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #e65100;
+    margin-top: 2px;
+  }
+
+  /* ── Canvas ── */
+  .canvas-wrap {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.1);
+    padding: 12px;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: center;
+    max-width: 560px;
+    width: 100%;
+  }
+  canvas {
+    display: block;
+    border-radius: 10px;
+  }
+
+  /* ── Formula ── */
+  .formula-box {
+    background: #fff3e0;
+    border: 3px solid #e65100;
+    border-radius: 18px;
+    padding: 14px 28px;
+    text-align: center;
+    max-width: 560px;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(0,0,0,.1);
+  }
+  .formula-box .formula {
+    font-size: clamp(1.1rem, 3.5vw, 1.5rem);
+    color: #333;
+    font-weight: 600;
+  }
+  .formula-box .result {
+    font-size: clamp(1.6rem, 5vw, 2.2rem);
+    color: #e65100;
+    font-weight: 900;
+    margin-top: 4px;
+  }
+  .highlight { color: #1565c0; }
+  .highlight-g { color: #2e7d32; }
+
+  /* ── Challenge ── */
+  .challenge-box {
+    margin-top: 14px;
+    background: #e8f5e9;
+    border: 3px solid #2e7d32;
+    border-radius: 18px;
+    padding: 14px 24px;
+    text-align: center;
+    max-width: 560px;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(0,0,0,.08);
+  }
+  .challenge-box .challenge-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #2e7d32;
+    margin-bottom: 6px;
+  }
+  .challenge-box .challenge-text {
+    font-size: clamp(1rem, 3vw, 1.3rem);
+    color: #333;
+    font-weight: 600;
+  }
+  .challenge-box .status {
+    margin-top: 8px;
+    font-size: 1.5rem;
+  }
+  .new-challenge-btn {
+    margin-top: 10px;
+    font-size: 1rem;
+    padding: 8px 22px;
+    border: 2px solid #2e7d32;
+    border-radius: 20px;
+    background: #fff;
+    color: #2e7d32;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .new-challenge-btn:hover {
+    background: #2e7d32;
+    color: #fff;
+  }
+</style>
+</head>
+<body>
+
+<h1>📐 Area Explorer</h1>
+
+<!-- Shape selector -->
+<div class="tabs">
+  <button class="tab-btn active" data-shape="rectangle" onclick="setShape('rectangle')">Rectangle</button>
+  <button class="tab-btn" data-shape="square" onclick="setShape('square')">Square</button>
+</div>
+
+<!-- Sliders -->
+<div class="controls">
+  <div class="slider-group">
+    <label id="widthLabel">Width</label>
+    <input type="range" id="widthSlider" min="1" max="12" value="4" oninput="onSliderChange()">
+    <span class="slider-val" id="widthVal">4</span>
+  </div>
+  <div class="slider-group" id="heightGroup">
+    <label>Height</label>
+    <input type="range" id="heightSlider" min="1" max="10" value="3" oninput="onSliderChange()">
+    <span class="slider-val" id="heightVal">3</span>
+  </div>
+</div>
+
+<!-- Visualization canvas -->
+<div class="canvas-wrap">
+  <canvas id="areaCanvas" width="520" height="400"></canvas>
+</div>
+
+<!-- Formula display -->
+<div class="formula-box">
+  <div class="formula" id="formulaLine"></div>
+  <div class="result" id="resultLine"></div>
+</div>
+
+<!-- Challenge mode -->
+<div class="challenge-box">
+  <div class="challenge-title">🎯 Challenge</div>
+  <div class="challenge-text" id="challengeText"></div>
+  <div class="status" id="challengeStatus"></div>
+  <button class="new-challenge-btn" onclick="newChallenge()">New Challenge</button>
+</div>
+
+<script>
+const canvas = document.getElementById('areaCanvas');
+const ctx = canvas.getContext('2d');
+const widthSlider = document.getElementById('widthSlider');
+const heightSlider = document.getElementById('heightSlider');
+const widthVal = document.getElementById('widthVal');
+const heightVal = document.getElementById('heightVal');
+const heightGroup = document.getElementById('heightGroup');
+const formulaLine = document.getElementById('formulaLine');
+const resultLine = document.getElementById('resultLine');
+const challengeText = document.getElementById('challengeText');
+const challengeStatus = document.getElementById('challengeStatus');
+const widthLabel = document.getElementById('widthLabel');
+
+let currentShape = 'rectangle';
+let targetArea = 0;
+let animSquares = [];
+let animFrame = 0;
+let animId = null;
+
+/* ── colours for unit squares ── */
+const palette = [
+  '#FF7043','#FF9800','#FFC107','#8BC34A','#4CAF50',
+  '#00BCD4','#2196F3','#7C4DFF','#E91E63','#F06292',
+  '#26A69A','#FFEE58'
+];
+
+function setShape(shape) {
+  currentShape = shape;
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.shape === shape);
+  });
+  if (shape === 'square') {
+    heightGroup.style.display = 'none';
+    widthLabel.textContent = 'Side Length';
+    widthSlider.max = 10;
+    if (parseInt(widthSlider.value) > 10) widthSlider.value = 10;
+  } else {
+    heightGroup.style.display = '';
+    widthLabel.textContent = 'Width';
+    widthSlider.max = 12;
+  }
+  onSliderChange();
+}
+
+function getW() { return parseInt(widthSlider.value); }
+function getH() { return currentShape === 'square' ? getW() : parseInt(heightSlider.value); }
+
+function onSliderChange() {
+  const w = getW(), h = getH();
+  widthVal.textContent = w;
+  heightVal.textContent = currentShape === 'square' ? w : h;
+  buildAnimList(w, h);
+  checkChallenge(w, h);
+}
+
+function buildAnimList(w, h) {
+  animSquares = [];
+  let idx = 0;
+  for (let row = 0; row < h; row++) {
+    for (let col = 0; col < w; col++) {
+      animSquares.push({ col, row, color: palette[idx % palette.length], scale: 0 });
+      idx++;
+    }
+  }
+  animFrame = 0;
+  if (animId) cancelAnimationFrame(animId);
+  animate(w, h);
+}
+
+function animate(w, h) {
+  const speed = 3;          // squares revealed per frame
+  let allDone = true;
+  for (let i = 0; i < animSquares.length; i++) {
+    if (i <= animFrame) {
+      if (animSquares[i].scale < 1) {
+        animSquares[i].scale = Math.min(1, animSquares[i].scale + 0.15);
+        allDone = false;
+      }
+    } else {
+      allDone = false;
+    }
+  }
+  animFrame += speed;
+  draw(w, h);
+  updateFormula(w, h);
+  if (!allDone) {
+    animId = requestAnimationFrame(() => animate(w, h));
+  }
+}
+
+function draw(w, h) {
+  const cw = canvas.width, ch = canvas.height;
+  ctx.clearRect(0, 0, cw, ch);
+
+  const maxCellW = (cw - 40) / w;
+  const maxCellH = (ch - 60) / h;
+  const cell = Math.min(maxCellW, maxCellH, 60);
+  const totalW = w * cell, totalH = h * cell;
+  const ox = (cw - totalW) / 2, oy = (ch - totalH) / 2;
+
+  // grid background
+  ctx.fillStyle = '#fafafa';
+  ctx.strokeStyle = '#e0e0e0';
+  ctx.lineWidth = 1;
+  ctx.fillRect(ox, oy, totalW, totalH);
+  for (let c = 0; c <= w; c++) {
+    ctx.beginPath(); ctx.moveTo(ox + c * cell, oy); ctx.lineTo(ox + c * cell, oy + totalH); ctx.stroke();
+  }
+  for (let r = 0; r <= h; r++) {
+    ctx.beginPath(); ctx.moveTo(ox, oy + r * cell); ctx.lineTo(ox + totalW, oy + r * cell); ctx.stroke();
+  }
+
+  // unit squares
+  for (const sq of animSquares) {
+    if (sq.scale <= 0) continue;
+    const x = ox + sq.col * cell;
+    const y = oy + sq.row * cell;
+    const s = sq.scale;
+    const pad = cell * (1 - s) / 2;
+    ctx.fillStyle = sq.color;
+    ctx.globalAlpha = s;
+    roundRect(ctx, x + pad + 1, y + pad + 1, cell * s - 2, cell * s - 2, 4);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+
+  // dimension labels
+  ctx.fillStyle = '#1565c0';
+  ctx.font = `bold ${Math.min(20, cell * 0.45)}px 'Segoe UI', sans-serif`;
+  ctx.textAlign = 'center';
+  // width label below
+  ctx.fillText(w + (currentShape === 'square' ? '' : ''), ox + totalW / 2, oy + totalH + 22);
+  // height label left
+  ctx.save();
+  ctx.translate(ox - 14, oy + totalH / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillStyle = '#2e7d32';
+  ctx.fillText(h + '', 0, 0);
+  ctx.restore();
+
+  // count shown squares
+  const shown = animSquares.filter(s => s.scale > 0.5).length;
+  ctx.fillStyle = '#e65100';
+  ctx.font = `bold ${Math.min(18, cell * 0.38)}px 'Segoe UI', sans-serif`;
+  ctx.textAlign = 'right';
+  ctx.fillText(shown + ' unit squares', cw - 14, ch - 8);
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+function updateFormula(w, h) {
+  const area = w * h;
+  if (currentShape === 'square') {
+    formulaLine.innerHTML = `Area = <span class="highlight">${w}</span> × <span class="highlight">${w}</span>`;
+  } else {
+    formulaLine.innerHTML = `Area = <span class="highlight">${w}</span> × <span class="highlight-g">${h}</span>`;
+  }
+  resultLine.textContent = `= ${area} square units`;
+}
+
+/* ── Challenge Mode ── */
+function newChallenge() {
+  const areas = [4, 6, 8, 9, 10, 12, 15, 16, 18, 20];
+  targetArea = areas[Math.floor(Math.random() * areas.length)];
+  challengeText.textContent = `Can you make a shape with area = ${targetArea}?`;
+  challengeStatus.textContent = '';
+  checkChallenge(getW(), getH());
+}
+
+function checkChallenge(w, h) {
+  if (!targetArea) return;
+  const area = w * h;
+  if (area === targetArea) {
+    challengeStatus.textContent = '🎉 You got it!';
+  } else {
+    challengeStatus.textContent = area < targetArea ? '⬆️ Need more!' : '⬇️ Too much!';
+  }
+}
+
+/* ── Responsive canvas ── */
+function resizeCanvas() {
+  const wrap = canvas.parentElement;
+  const size = Math.min(wrap.clientWidth - 24, 520);
+  canvas.width = size;
+  canvas.height = Math.round(size * 0.77);
+  onSliderChange();
+}
+window.addEventListener('resize', resizeCanvas);
+
+/* ── Init ── */
+resizeCanvas();
+newChallenge();
+</script>
+</body>
+</html>
