@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Area & Volume Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f0ebe3;
+    --clay-light: #faf7f2;
+    --clay-mid: #ece6db;
+    --shadow-out: 8px 8px 20px rgba(0,0,0,.10), -6px -6px 16px rgba(255,255,255,.7);
+    --shadow-in: inset 4px 4px 10px rgba(0,0,0,.06), inset -4px -4px 10px rgba(255,255,255,.6);
+    --shadow-btn: 4px 4px 12px rgba(0,0,0,.12), -3px -3px 8px rgba(255,255,255,.6);
+    --accent-area: #d4856a;
+    --accent-vol: #7b7fc7;
+    --accent-green: #6da87e;
+    --text: #3d3a36;
+    --text-soft: #7a756d;
+    --radius: 24px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* ── Navigation ── */
+  .nav-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg);
+    padding: 16px 20px 12px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .nav-btn {
+    font-family: inherit;
+    font-size: .95rem;
+    font-weight: 700;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 40px;
+    background: var(--clay-light);
+    color: var(--text-soft);
+    box-shadow: var(--shadow-btn);
+    cursor: pointer;
+    transition: all .25s;
+  }
+  .nav-btn:hover { transform: translateY(-2px); }
+  .nav-btn.active {
+    background: var(--text);
+    color: var(--clay-light);
+    box-shadow: inset 3px 3px 8px rgba(0,0,0,.2), 2px 2px 8px rgba(0,0,0,.1);
+  }
+
+  /* ── Sections ── */
+  .section {
+    display: none;
+    padding: 20px 20px 40px;
+    max-width: 860px;
+    margin: 0 auto;
+    animation: fadeUp .35s ease;
+  }
+  .section.active { display: block; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Clay card ── */
+  .clay {
+    background: var(--clay-light);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-out);
+    padding: 32px;
+    margin-bottom: 24px;
+  }
+  .clay-inset {
+    background: var(--clay-mid);
+    border-radius: 18px;
+    box-shadow: var(--shadow-in);
+    padding: 20px 24px;
+  }
+
+  /* ── Typography ── */
+  h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 6px;
+    letter-spacing: -.02em;
+  }
+  h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  p { line-height: 1.8; font-size: 1rem; margin-bottom: 12px; }
+  .subtitle {
+    text-align: center;
+    color: var(--text-soft);
+    font-size: 1.05rem;
+    margin-bottom: 32px;
+    font-weight: 600;
+  }
+  .color-area { color: var(--accent-area); }
+  .color-vol { color: var(--accent-vol); }
+  .color-green { color: var(--accent-green); }
+
+  /* ── Home icon cards ── */
+  .duo-row {
+    display: flex;
+    gap: 20px;
+    margin: 28px 0;
+    flex-wrap: wrap;
+  }
+  .duo-card {
+    flex: 1;
+    min-width: 250px;
+    text-align: center;
+    padding: 28px 24px;
+  }
+  .duo-card h3 { font-size: 1.25rem; }
+  .duo-card p { color: var(--text-soft); font-size: .95rem; }
+
+  /* ── Objectives ── */
+  .obj-list {
+    list-style: none;
+    padding: 0;
+  }
+  .obj-list li {
+    padding: 10px 0 10px 12px;
+    font-size: .98rem;
+    line-height: 1.7;
+    border-bottom: 1px solid rgba(0,0,0,.05);
+  }
+  .obj-list li:last-child { border-bottom: none; }
+
+  /* ── Formula pills ── */
+  .pill-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 14px 0;
+  }
+  .pill {
+    display: inline-block;
+    border-radius: 14px;
+    padding: 10px 20px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    box-shadow: var(--shadow-in);
+  }
+  .pill.area { background: #f3e0d6; color: var(--accent-area); }
+  .pill.vol  { background: #dddcf0; color: var(--accent-vol); }
+
+  /* ── Simulator iframe ── */
+  .sim-wrap {
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: var(--shadow-in);
+    margin: 4px 0;
+  }
+  .sim-frame {
+    width: 100%;
+    border: none;
+    min-height: 580px;
+    display: block;
+    background: var(--clay-mid);
+  }
+  .sim-frame.tall { min-height: 660px; }
+
+  /* ── Steps ── */
+  .steps {
+    list-style: none;
+    padding: 0;
+    counter-reset: step;
+  }
+  .steps li {
+    padding: 14px 0 14px 50px;
+    position: relative;
+    font-size: .98rem;
+    line-height: 1.75;
+    border-bottom: 1px solid rgba(0,0,0,.05);
+  }
+  .steps li:last-child { border-bottom: none; }
+  .steps li::before {
+    counter-increment: step;
+    content: counter(step);
+    position: absolute;
+    left: 0; top: 14px;
+    width: 34px; height: 34px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: .9rem;
+    box-shadow: var(--shadow-btn);
+  }
+  .steps.area-steps li::before { background: #f3e0d6; color: var(--accent-area); }
+  .steps.vol-steps li::before  { background: #dddcf0; color: var(--accent-vol); }
+  .answer { color: var(--text-soft); font-style: italic; font-size: .88rem; }
+
+  /* ── Think box ── */
+  .think-box {
+    margin-top: 16px;
+    padding: 20px 24px;
+    border-radius: 18px;
+    box-shadow: var(--shadow-in);
+  }
+  .think-box.area-think { background: #faf0ea; }
+  .think-box.vol-think  { background: #eeedf8; }
+  .think-box ul { padding-left: 18px; }
+  .think-box li { line-height: 1.8; margin-bottom: 4px; font-size: .96rem; }
+
+  /* ── Summary cards ── */
+  .sum-card { padding: 28px; }
+  .sum-card h2 { margin-bottom: 18px; }
+  .sum-formula {
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin-bottom: 14px;
+    font-weight: 700;
+    font-size: 1.02rem;
+    line-height: 1.9;
+    box-shadow: var(--shadow-in);
+  }
+  .sum-formula.area { background: #f3e0d6; color: var(--accent-area); }
+  .sum-formula.vol  { background: #dddcf0; color: var(--accent-vol); }
+  .sum-card ul { list-style: none; padding: 0; }
+  .sum-card li {
+    padding: 7px 0;
+    line-height: 1.7;
+    font-size: .95rem;
+  }
+
+  .takeaway {
+    padding: 28px 32px;
+  }
+  .takeaway h2 { margin-bottom: 12px; }
+  .takeaway ul { padding-left: 20px; }
+  .takeaway li { padding: 6px 0; line-height: 1.7; font-size: .98rem; }
+
+  .congrats-box {
+    text-align: center;
+    padding: 28px;
+  }
+  .congrats-box p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 520px) {
+    .nav-btn { padding: 8px 16px; font-size: .85rem; }
+    .clay { padding: 22px 18px; }
+    h1 { font-size: 1.7rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="nav-bar">
+  <button class="nav-btn active" onclick="showSection('home')">Home</button>
+  <button class="nav-btn" onclick="showSection('area')">Learn: Area</button>
+  <button class="nav-btn" onclick="showSection('volume')">Learn: Volume</button>
+  <button class="nav-btn" onclick="showSection('summary')">Summary</button>
+</nav>
+
+<!-- ═══════════════════════════════════════════ HOME ═══════════════════════════════════════════ -->
+<section class="section active" id="sec-home">
+
+  <h1>Area & Volume Explorer</h1>
+  <p class="subtitle">An Interactive Learning Module for Young Learners</p>
+
+  <div class="clay">
+    <p>Welcome to the <strong>Area & Volume Explorer</strong>! In this module you will learn two important maths concepts through fun, interactive simulators.</p>
+    <p>Drag sliders, count squares and cubes, rotate 3D shapes, and take on challenges — all by yourself!</p>
+  </div>
+
+  <div class="duo-row">
+    <div class="clay duo-card">
+      <h3 class="color-area">Area</h3>
+      <p>How much space does a flat shape cover? Explore rectangles and squares by counting unit squares.</p>
+    </div>
+    <div class="clay duo-card">
+      <h3 class="color-vol">Volume</h3>
+      <p>How much space does a 3D shape fill? Stack unit cubes inside cuboids and cubes to find out.</p>
+    </div>
+  </div>
+
+  <div class="clay">
+    <h2 class="color-green">Learning Objectives</h2>
+    <ul class="obj-list">
+      <li>Understand what <strong>area</strong> means and calculate the area of squares and rectangles</li>
+      <li>Understand what <strong>volume</strong> means and calculate the volume of cubes and cuboids</li>
+      <li>Use the formula <strong>Area = width × height</strong></li>
+      <li>Use the formula <strong>Volume = length × width × height</strong></li>
+      <li>Develop spatial reasoning through visual and hands-on exploration</li>
+    </ul>
+  </div>
+
+</section>
+
+<!-- ═══════════════════════════════════════════ AREA ═══════════════════════════════════════════ -->
+<section class="section" id="sec-area">
+
+  <h1 class="color-area">Exploring Area</h1>
+  <p class="subtitle">Learn how to measure the space inside flat shapes</p>
+
+  <div class="clay">
+    <h2>What is Area?</h2>
+    <p>Area is the amount of space inside a <strong>flat (2D) shape</strong>. We measure area in <strong>square units</strong> — think of it as counting how many small squares fit inside the shape.</p>
+    <div class="pill-row">
+      <span class="pill area">Rectangle: Area = width × height</span>
+      <span class="pill area">Square: Area = side × side</span>
+    </div>
+    <p>For example, a rectangle with width 5 and height 3 has an area of <strong>5 × 3 = 15 square units</strong>.</p>
+  </div>
+
+  <div class="clay">
+    <h2>Try the Simulator</h2>
+    <p>Drag the sliders to change the shape. Watch the colourful unit squares fill up and count them.</p>
+    <div class="sim-wrap">
+      <iframe class="sim-frame"
+        src="https://billy0917.github.io/INT4060-simulation/area-simulator/"
+        allow="fullscreen"
+        loading="lazy">
+      </iframe>
+    </div>
+  </div>
+
+  <div class="clay">
+    <h2>Guided Activity</h2>
+    <p>Follow these steps in the simulator above:</p>
+    <ol class="steps area-steps">
+      <li>Set the shape to <strong>Rectangle</strong>. Set width = 5 and height = 3. How many unit squares do you see? <span class="answer">(Answer: 15)</span></li>
+      <li>Now change the width to <strong>6</strong>. What happens to the area? Does it get bigger or smaller?</li>
+      <li>Switch to <strong>Square</strong>. Set the side length to <strong>4</strong>. What is the area? <span class="answer">(Answer: 16)</span></li>
+      <li>Try the <strong>Challenge mode</strong> — adjust the sliders to match the target area.</li>
+    </ol>
+
+    <div class="think-box area-think">
+      <h3 class="color-area">Think About It</h3>
+      <ul>
+        <li>If you <strong>double the width</strong> of a rectangle, what happens to the area?</li>
+        <li>Can two different rectangles have the <strong>same area</strong>? Try to find an example.</li>
+      </ul>
+    </div>
+  </div>
+
+</section>
+
+<!-- ═══════════════════════════════════════════ VOLUME ═══════════════════════════════════════════ -->
+<section class="section" id="sec-volume">
+
+  <h1 class="color-vol">Exploring Volume</h1>
+  <p class="subtitle">Learn how to measure the space inside 3D shapes</p>
+
+  <div class="clay">
+    <h2>What is Volume?</h2>
+    <p>Volume is the amount of space inside a <strong>3D shape</strong>. We measure volume in <strong>cubic units</strong> — imagine stacking small cubes to fill the shape.</p>
+    <div class="pill-row">
+      <span class="pill vol">Cuboid: Volume = length × width × height</span>
+      <span class="pill vol">Cube: Volume = side × side × side</span>
+    </div>
+    <p>For example, a cuboid with length 4, width 3, and height 2 has a volume of <strong>4 × 3 × 2 = 24 unit cubes</strong>.</p>
+  </div>
+
+  <div class="clay">
+    <h2>Try the Simulator</h2>
+    <p>Drag the sliders to change the shape. Rotate the 3D model by dragging on it. Try "Build Layer by Layer" to watch the cubes stack up.</p>
+    <div class="sim-wrap">
+      <iframe class="sim-frame tall"
+        src="https://billy0917.github.io/INT4060-simulation/volume-simulator/"
+        allow="fullscreen"
+        loading="lazy">
+      </iframe>
+    </div>
+  </div>
+
+  <div class="clay">
+    <h2>Guided Activity</h2>
+    <p>Follow these steps in the simulator above:</p>
+    <ol class="steps vol-steps">
+      <li>Set the shape to <strong>Cuboid</strong>. Set length = 4, width = 3, height = 2. Count the unit cubes. <span class="answer">(Answer: 24)</span></li>
+      <li>Click <strong>Build Layer by Layer</strong> to watch the cubes stack up. How many cubes are in each layer? <span class="answer">(Answer: 12)</span></li>
+      <li>Switch to <strong>Cube</strong>. Set the side length to <strong>3</strong>. What is the volume? <span class="answer">(Answer: 27)</span></li>
+      <li><strong>Drag to rotate</strong> the 3D shape and view it from different angles.</li>
+      <li>Try the <strong>Challenge mode</strong> — adjust the sliders to match the target volume.</li>
+    </ol>
+
+    <div class="think-box vol-think">
+      <h3 class="color-vol">Think About It</h3>
+      <ul>
+        <li>How is <strong>volume</strong> different from <strong>area</strong>?</li>
+        <li>If you <strong>double the height</strong> of a cuboid, what happens to the volume?</li>
+        <li>A cube has side length 2. How many unit cubes fit inside? <span class="answer">(Answer: 8)</span></li>
+      </ul>
+    </div>
+  </div>
+
+</section>
+
+<!-- ═══════════════════════════════════════════ SUMMARY ═══════════════════════════════════════════ -->
+<section class="section" id="sec-summary">
+
+  <h1>What We Learned</h1>
+  <p class="subtitle">A recap of the key concepts and formulas</p>
+
+  <div class="duo-row">
+    <div class="clay sum-card">
+      <h2 class="color-area">Area</h2>
+      <div class="sum-formula area">
+        Rectangle: Area = width × height<br>
+        Square: Area = side × side
+      </div>
+      <ul>
+        <li>Area measures the <strong>flat space</strong> inside a 2D shape</li>
+        <li>Measured in <strong>square units</strong></li>
+        <li>Count the unit squares to find the area</li>
+      </ul>
+    </div>
+    <div class="clay sum-card">
+      <h2 class="color-vol">Volume</h2>
+      <div class="sum-formula vol">
+        Cuboid: Volume = length × width × height<br>
+        Cube: Volume = side × side × side
+      </div>
+      <ul>
+        <li>Volume measures the <strong>space inside</strong> a 3D shape</li>
+        <li>Measured in <strong>cubic units</strong></li>
+        <li>Count the unit cubes to find the volume</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="clay takeaway">
+    <h2 class="color-green">Key Takeaways</h2>
+    <ul>
+      <li><strong>Area</strong> tells us how much flat space a 2D shape covers</li>
+      <li><strong>Volume</strong> tells us how much space a 3D shape fills</li>
+      <li>You can always <strong>count unit squares</strong> (for area) or <strong>unit cubes</strong> (for volume) to check your answer</li>
+      <li>When one dimension doubles, the area or volume <strong>also doubles</strong></li>
+    </ul>
+  </div>
+
+  <div class="clay congrats-box">
+    <p><strong>Congratulations!</strong> You've completed the Area & Volume Explorer module.<br>
+    Keep exploring and have fun with maths!</p>
+  </div>
+
+</section>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>
