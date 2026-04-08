@@ -617,22 +617,7 @@ const dirLight = new THREE.DirectionalLight(0xffffff, 0.85);
 dirLight.position.set(10, 15, 10);
 scene.add(dirLight);
 
-/* ── Ground Plane ── */
-function updateGroundPlane(l, w, h) {
-  if (groundPlane) { scene.remove(groundPlane); groundPlane = null; }
-  const size = Math.max(l, w) * 2.5;
-  const geo = new THREE.PlaneGeometry(size, size);
-  const mat = new THREE.MeshBasicMaterial({ color: 0xe4ded5, transparent: true, opacity: 0.5, side: THREE.DoubleSide });
-  groundPlane = new THREE.Mesh(geo, mat);
-  groundPlane.rotation.x = -Math.PI / 2;
-  groundPlane.position.y = -(h * (1 + 0.06)) / 2 - 0.1;
-  scene.add(groundPlane);
 
-  // grid lines on ground
-  const gridHelper = new THREE.GridHelper(size, Math.round(size), 0xd7ccc8, 0xd7ccc8);
-  gridHelper.position.y = groundPlane.position.y + 0.01;
-  groundPlane.add(gridHelper);
-}
 
 /* ── Dimension Labels (Three.js Sprites) ── */
 function createTextSprite(text, color) {
@@ -768,8 +753,7 @@ function buildScene() {
   }
   scene.add(cubeGroup);
 
-  // Ground plane + dimension labels
-  updateGroundPlane(l, w, h);
+  // Dimension labels
   updateDimensionLabels(l, w, h);
 
   // Camera framing
