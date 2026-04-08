@@ -450,6 +450,192 @@
   @media (max-width: 360px) {
     .num-btn { width: 32px; height: 32px; font-size: .85rem; border-radius: 10px; }
   }
+
+  /* ── Mode Toggle ── */
+  .mode-toggle {
+    display: flex;
+    width: 100%;
+    border-radius: 40px;
+    background: var(--clay-mid);
+    box-shadow: var(--shadow-in);
+    overflow: hidden;
+  }
+  .mode-btn {
+    flex: 1;
+    font-family: inherit;
+    font-size: .88rem;
+    font-weight: 700;
+    padding: 10px 8px;
+    border: none;
+    background: transparent;
+    color: var(--text-soft);
+    cursor: pointer;
+    transition: all .25s;
+    border-radius: 40px;
+  }
+  .mode-btn.active {
+    background: var(--text);
+    color: var(--clay-light);
+    box-shadow: var(--shadow-btn);
+  }
+
+  /* ── Level Map ── */
+  .level-map {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+    overflow-x: auto;
+    padding: 6px 2px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .level-dot {
+    position: relative;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 3px solid var(--clay-mid);
+    background: var(--clay-light);
+    box-shadow: var(--shadow-btn);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    font-size: .8rem;
+    font-weight: 800;
+    color: var(--text-soft);
+    cursor: pointer;
+    transition: all .25s;
+    flex-shrink: 0;
+  }
+  .level-dot.locked {
+    opacity: .45;
+    cursor: default;
+  }
+  .level-dot.current {
+    border-color: var(--accent);
+    color: var(--accent-dark);
+    animation: dotPulse 1.5s ease-in-out infinite;
+  }
+  @keyframes dotPulse {
+    0%, 100% { box-shadow: var(--shadow-btn); }
+    50% { box-shadow: 0 0 0 6px rgba(212,133,106,.25), var(--shadow-btn); }
+  }
+  .level-dot.done {
+    background: var(--green-light);
+    border-color: var(--green);
+    color: var(--green);
+  }
+  .level-stars {
+    position: absolute;
+    bottom: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: .55rem;
+    white-space: nowrap;
+    line-height: 1;
+  }
+
+  /* ── Level Panel ── */
+  .level-panel {
+    background: var(--green-light);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-in);
+    padding: 16px 18px;
+    text-align: center;
+    width: 100%;
+  }
+  .level-header {
+    font-size: .9rem;
+    font-weight: 800;
+    color: var(--green);
+    margin-bottom: 4px;
+  }
+  .level-desc {
+    font-size: clamp(.95rem, 2.8vw, 1.15rem);
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .level-hint {
+    font-size: .82rem;
+    color: var(--text-soft);
+    font-style: italic;
+    margin-bottom: 6px;
+  }
+  .level-timer {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--accent-dark);
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 4px;
+  }
+  .level-timer .timer-label {
+    font-size: .75rem;
+    font-weight: 600;
+    color: var(--text-soft);
+  }
+  .level-result {
+    margin-top: 8px;
+    padding: 12px;
+    border-radius: 16px;
+    display: none;
+  }
+  .level-result.show { display: block; }
+  .level-result .stars-display {
+    font-size: 1.8rem;
+    margin-bottom: 4px;
+  }
+  .level-result .time-display {
+    font-size: .85rem;
+    color: var(--text-soft);
+    font-weight: 600;
+  }
+  .next-level-btn {
+    font-family: inherit;
+    margin-top: 10px;
+    font-size: .95rem;
+    font-weight: 700;
+    padding: 10px 28px;
+    border: none;
+    border-radius: 40px;
+    background: var(--green);
+    color: var(--clay-light);
+    box-shadow: var(--shadow-btn);
+    cursor: pointer;
+    transition: all .25s;
+    min-height: 40px;
+  }
+  .next-level-btn:hover { transform: translateY(-2px); }
+  .next-level-btn:active { box-shadow: var(--shadow-in); transform: translateY(0); }
+
+  /* ── Completion Screen ── */
+  .completion-screen {
+    text-align: center;
+    padding: 20px 18px;
+    width: 100%;
+  }
+  .completion-screen h2 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--green);
+    margin-bottom: 8px;
+  }
+  .completion-screen .total-stars {
+    font-size: 2.2rem;
+    margin-bottom: 4px;
+  }
+  .completion-screen .total-label {
+    font-size: .95rem;
+    color: var(--text-soft);
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+
+  /* ── Hide/show challenge UI for mode switching ── */
+  .free-play-ui { display: contents; }
+  .challenge-mode-ui { display: none; }
+  body.challenge-active .free-play-ui { display: none; }
+  body.challenge-active .challenge-mode-ui { display: contents; }
 </style>
 </head>
 <body>
@@ -503,16 +689,48 @@
 
     <div class="real-world" id="realWorld"></div>
 
-    <div class="difficulty-bar">
-      <button class="diff-btn active-easy" data-diff="easy" onclick="setDifficulty('easy')">Easy</button>
-      <button class="diff-btn" data-diff="medium" onclick="setDifficulty('medium')">Medium</button>
-      <button class="diff-btn" data-diff="hard" onclick="setDifficulty('hard')">Hard</button>
+    <!-- Mode toggle -->
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="modeFreeBtn" onclick="switchMode('free')">Free Play</button>
+      <button class="mode-btn" id="modeChalBtn" onclick="switchMode('challenge')">Challenge Mode 🏆</button>
     </div>
-    <div class="challenge-box">
-      <div class="challenge-title">Challenge</div>
-      <div class="challenge-text" id="challengeText"></div>
-      <div class="status" id="challengeStatus" role="status" aria-live="polite"></div>
-      <button class="new-challenge-btn" onclick="newChallenge()">New Challenge</button>
+
+    <!-- FREE PLAY UI -->
+    <div class="free-play-ui">
+      <div class="difficulty-bar">
+        <button class="diff-btn active-easy" data-diff="easy" onclick="setDifficulty('easy')">Easy</button>
+        <button class="diff-btn" data-diff="medium" onclick="setDifficulty('medium')">Medium</button>
+        <button class="diff-btn" data-diff="hard" onclick="setDifficulty('hard')">Hard</button>
+      </div>
+      <div class="challenge-box">
+        <div class="challenge-title">Challenge</div>
+        <div class="challenge-text" id="challengeText"></div>
+        <div class="status" id="challengeStatus" role="status" aria-live="polite"></div>
+        <button class="new-challenge-btn" onclick="newChallenge()">New Challenge</button>
+      </div>
+    </div>
+
+    <!-- CHALLENGE MODE UI -->
+    <div class="challenge-mode-ui">
+      <div class="level-map" id="levelMap"></div>
+      <div class="level-panel" id="levelPanel">
+        <div class="level-header" id="levelHeader">Level 1 / 10</div>
+        <div class="level-desc" id="levelDesc"></div>
+        <div class="level-hint" id="levelHint"></div>
+        <div class="level-timer" id="levelTimer">0.0s <span class="timer-label">⏱️</span></div>
+        <div class="status" id="levelStatus" role="status" aria-live="polite"></div>
+        <div class="level-result" id="levelResult">
+          <div class="stars-display" id="starsDisplay"></div>
+          <div class="time-display" id="timeDisplay"></div>
+          <button class="next-level-btn" id="nextLevelBtn" onclick="advanceLevel()">Next Level →</button>
+        </div>
+      </div>
+      <div class="completion-screen" id="completionScreen" style="display:none;">
+        <h2>🎉 All Levels Complete!</h2>
+        <div class="total-stars" id="totalStars"></div>
+        <div class="total-label" id="totalLabel"></div>
+        <button class="next-level-btn" onclick="resetProgress()">Play Again</button>
+      </div>
     </div>
 
   </div><!-- /info-panel -->
@@ -893,6 +1111,9 @@ function newChallenge() {
 }
 
 function checkChallenge(w, h) {
+  // Challenge Mode: delegate to level system
+  if (challengeActive) { checkLevelComplete(w, h); return; }
+
   if (!targetArea && !targetPeri) return;
   const area = w * h;
   const peri = 2 * (w + h);
@@ -920,6 +1141,7 @@ function checkChallenge(w, h) {
 const confettiColors = ['#ff6b6b','#ff9f43','#ffd32a','#26de81','#45aaf2','#a55eea','#fd79a8','#00d2d3'];
 function spawnConfetti() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const target = challengeActive ? levelPanel : challengeBox;
   for (let i = 0; i < 32; i++) {
     const el = document.createElement('div');
     el.className = 'confetti-piece';
@@ -928,18 +1150,19 @@ function spawnConfetti() {
     el.style.setProperty('--drift-x', `${-70 + Math.random() * 140}px`);
     el.style.animationDelay = (Math.random() * 0.3) + 's';
     el.style.animationDuration = (1.2 + Math.random() * 0.8) + 's';
-    challengeBox.style.position = 'relative';
-    challengeBox.style.overflow = 'visible';
-    challengeBox.appendChild(el);
+    target.style.position = 'relative';
+    target.style.overflow = 'visible';
+    target.appendChild(el);
     setTimeout(() => el.remove(), 2500);
   }
 }
 function celebratePulse() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  challengeBox.classList.remove('celebrate');
-  void challengeBox.offsetWidth;
-  challengeBox.classList.add('celebrate');
-  setTimeout(() => challengeBox.classList.remove('celebrate'), 600);
+  const target = challengeActive ? levelPanel : challengeBox;
+  target.classList.remove('celebrate');
+  void target.offsetWidth;
+  target.classList.add('celebrate');
+  setTimeout(() => target.classList.remove('celebrate'), 600);
 }
 
 /* ── Responsive canvas ── */
@@ -951,6 +1174,253 @@ function resizeCanvas() {
   onSliderChange();
 }
 window.addEventListener('resize', resizeCanvas);
+
+/* ══════════════════════════════════════════════
+   ██  CHALLENGE MODE (闖關模式)
+   ══════════════════════════════════════════════ */
+const LEVELS = [
+  { desc: 'Make a shape with area = 6',             area: 6,  peri: 0,  hint: 'Try width = 3, height = 2' },
+  { desc: 'Make a shape with area = 8',             area: 8,  peri: 0,  hint: '' },
+  { desc: 'Make a shape with area = 12',            area: 12, peri: 0,  hint: '' },
+  { desc: 'Make a shape with perimeter = 12',       area: 0,  peri: 12, hint: 'Turn on Show Perimeter!' },
+  { desc: 'Make a shape with perimeter = 16',       area: 0,  peri: 16, hint: '' },
+  { desc: 'Make a rectangle with area = 15',        area: 15, peri: 0,  hint: '', shape: 'rectangle' },
+  { desc: 'Make a square with area = 9',            area: 9,  peri: 0,  hint: '', shape: 'square' },
+  { desc: 'Area = 12 AND Perimeter = 14',           area: 12, peri: 14, hint: '' },
+  { desc: 'Area = 16 AND Perimeter = 20',           area: 16, peri: 20, hint: '' },
+  { desc: 'Area = 20 AND Perimeter = 18',           area: 20, peri: 18, hint: '' },
+];
+
+const STORAGE_KEY = 'area-challenge-progress';
+let challengeActive = false;
+let currentLevel = 0;      // 0-indexed
+let levelTimer = null;
+let levelStartTime = 0;
+let levelCompleted = false;
+let progress = {};          // { levels: { 0: {stars,bestTime}, ... } }
+
+// DOM refs for challenge mode
+const levelMap       = document.getElementById('levelMap');
+const levelPanel     = document.getElementById('levelPanel');
+const levelHeader    = document.getElementById('levelHeader');
+const levelDesc      = document.getElementById('levelDesc');
+const levelHint      = document.getElementById('levelHint');
+const levelTimerEl   = document.getElementById('levelTimer');
+const levelStatus    = document.getElementById('levelStatus');
+const levelResult    = document.getElementById('levelResult');
+const starsDisplay   = document.getElementById('starsDisplay');
+const timeDisplay    = document.getElementById('timeDisplay');
+const nextLevelBtn   = document.getElementById('nextLevelBtn');
+const completionScreen = document.getElementById('completionScreen');
+const totalStarsEl   = document.getElementById('totalStars');
+const totalLabelEl   = document.getElementById('totalLabel');
+
+function loadProgress() {
+  try {
+    const d = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (d && d.levels) { progress = d; return; }
+  } catch(e) {}
+  progress = { levels: {} };
+}
+
+function saveProgress() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+}
+
+function getFirstUnbeaten() {
+  for (let i = 0; i < LEVELS.length; i++) {
+    if (!progress.levels[i]) return i;
+  }
+  return LEVELS.length; // all done
+}
+
+function switchMode(mode) {
+  document.getElementById('modeFreeBtn').classList.toggle('active', mode === 'free');
+  document.getElementById('modeChalBtn').classList.toggle('active', mode === 'challenge');
+  challengeActive = mode === 'challenge';
+  document.body.classList.toggle('challenge-active', challengeActive);
+
+  if (challengeActive) {
+    loadProgress();
+    const first = getFirstUnbeaten();
+    if (first >= LEVELS.length) {
+      showCompletion();
+    } else {
+      completionScreen.style.display = 'none';
+      levelPanel.style.display = '';
+      startLevel(first);
+    }
+    renderLevelMap();
+  } else {
+    stopTimer();
+    newChallenge();
+  }
+}
+
+function renderLevelMap() {
+  levelMap.innerHTML = '';
+  for (let i = 0; i < LEVELS.length; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'level-dot';
+    const done = progress.levels[i];
+    const unlocked = i === 0 || progress.levels[i - 1];
+
+    if (done) {
+      dot.classList.add('done');
+      dot.innerHTML = `${i + 1}<span class="level-stars">${'⭐'.repeat(done.stars)}</span>`;
+    } else if (i === currentLevel && challengeActive) {
+      dot.classList.add('current');
+      dot.textContent = i + 1;
+    } else if (!unlocked) {
+      dot.classList.add('locked');
+      dot.textContent = '🔒';
+    } else {
+      dot.textContent = i + 1;
+    }
+
+    if (unlocked && challengeActive) {
+      dot.addEventListener('click', () => {
+        if (!levelCompleted || done || i === currentLevel) {
+          // Allow replaying completed or starting unlocked
+          if (unlocked) startLevel(i);
+        }
+      });
+    }
+    levelMap.appendChild(dot);
+  }
+}
+
+function startLevel(n) {
+  currentLevel = n;
+  levelCompleted = false;
+  const lv = LEVELS[n];
+
+  levelHeader.textContent = `Level ${n + 1} / ${LEVELS.length}`;
+  levelDesc.textContent = lv.desc;
+  levelHint.textContent = lv.hint || '';
+  levelHint.style.display = lv.hint ? '' : 'none';
+  levelStatus.textContent = '';
+  levelStatus.className = 'status';
+  levelResult.classList.remove('show');
+  levelPanel.style.display = '';
+  completionScreen.style.display = 'none';
+
+  // Auto-enable perimeter if level needs it
+  if (lv.peri && !showPerimeter) togglePerimeter();
+  // Auto-switch shape if level requires it
+  if (lv.shape && currentShape !== lv.shape) setShape(lv.shape);
+
+  // Start timer
+  levelStartTime = performance.now();
+  stopTimer();
+  levelTimer = setInterval(updateTimer, 100);
+  updateTimer();
+
+  renderLevelMap();
+  // Check if already correct
+  checkLevelComplete(getW(), getH());
+}
+
+function updateTimer() {
+  if (levelCompleted) return;
+  const elapsed = ((performance.now() - levelStartTime) / 1000).toFixed(1);
+  levelTimerEl.innerHTML = `${elapsed}s <span class="timer-label">⏱️</span>`;
+}
+
+function stopTimer() {
+  if (levelTimer) { clearInterval(levelTimer); levelTimer = null; }
+}
+
+function checkLevelComplete(w, h) {
+  if (!challengeActive || levelCompleted) return;
+  const lv = LEVELS[currentLevel];
+  const area = w * h;
+  const peri = 2 * (w + h);
+
+  let areaOk = !lv.area || area === lv.area;
+  let periOk = !lv.peri || peri === lv.peri;
+  let shapeOk = !lv.shape || currentShape === lv.shape;
+
+  if (areaOk && periOk && shapeOk) {
+    completeLevel();
+  } else {
+    let hints = [];
+    if (lv.area && !areaOk) hints.push(area < lv.area ? 'Area: need more!' : 'Area: too much!');
+    if (lv.peri && !periOk) hints.push(peri < lv.peri ? 'Perimeter: need more!' : 'Perimeter: too much!');
+    if (lv.shape && !shapeOk) hints.push(`Switch to ${lv.shape}!`);
+    levelStatus.textContent = hints.join(' · ');
+    levelStatus.className = 'status status-hint';
+  }
+}
+
+function completeLevel() {
+  levelCompleted = true;
+  stopTimer();
+  const elapsed = (performance.now() - levelStartTime) / 1000;
+  const stars = elapsed <= 10 ? 3 : elapsed <= 20 ? 2 : 1;
+
+  // Update best
+  const prev = progress.levels[currentLevel];
+  if (!prev || stars > prev.stars || (stars === prev.stars && elapsed < prev.bestTime)) {
+    progress.levels[currentLevel] = { stars, bestTime: Math.round(elapsed * 10) / 10 };
+    saveProgress();
+  }
+
+  // Show result
+  levelStatus.textContent = '✅ Well done!';
+  levelStatus.className = 'status status-success';
+  starsDisplay.textContent = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
+  timeDisplay.textContent = `Time: ${elapsed.toFixed(1)}s`;
+  levelResult.classList.add('show');
+
+  // Is this the last level?
+  if (currentLevel >= LEVELS.length - 1) {
+    nextLevelBtn.textContent = 'See Results 🏆';
+    nextLevelBtn.onclick = () => showCompletion();
+  } else {
+    nextLevelBtn.textContent = 'Next Level →';
+    nextLevelBtn.onclick = () => advanceLevel();
+  }
+
+  SFX.success();
+  spawnConfetti();
+  celebratePulse();
+  renderLevelMap();
+}
+
+function advanceLevel() {
+  const next = currentLevel + 1;
+  if (next >= LEVELS.length) {
+    showCompletion();
+  } else {
+    startLevel(next);
+  }
+}
+
+function showCompletion() {
+  levelPanel.style.display = 'none';
+  completionScreen.style.display = '';
+  stopTimer();
+
+  let total = 0, max = LEVELS.length * 3;
+  for (let i = 0; i < LEVELS.length; i++) {
+    if (progress.levels[i]) total += progress.levels[i].stars;
+  }
+  totalStarsEl.textContent = '⭐'.repeat(total);
+  totalLabelEl.textContent = `${total} / ${max} stars`;
+
+  renderLevelMap();
+  spawnConfetti();
+}
+
+function resetProgress() {
+  progress = { levels: {} };
+  saveProgress();
+  completionScreen.style.display = 'none';
+  levelPanel.style.display = '';
+  startLevel(0);
+  renderLevelMap();
+}
 
 /* ── Init ── */
 function renderNumBtns(container, min, max, slider) {
