@@ -334,6 +334,8 @@
     padding: 14px 18px;
     text-align: center;
     width: 100%;
+    position: relative;
+    overflow: visible;
   }
   .challenge-box .challenge-title {
     font-size: 1.15rem;
@@ -416,14 +418,41 @@
     100% { transform: scale(1); }
   }
 
-  /* ── Fireworks Overlay ── */
-  #fireworksCanvas {
-    position: fixed;
+  /* ── Fireworks (in-panel) ── */
+  .fw-container {
+    position: absolute;
     inset: 0;
-    width: 100vw;
-    height: 100vh;
     pointer-events: none;
-    z-index: 9999;
+    overflow: visible;
+    z-index: 10;
+  }
+  .fw-particle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    will-change: transform, opacity;
+    animation: fwShoot var(--dur) cubic-bezier(.2,.8,.3,1) forwards;
+    animation-delay: var(--delay, 0s);
+    opacity: 0;
+  }
+  .fw-glow {
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 60px; height: 60px;
+    margin: -30px 0 0 -30px;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: fwGlow .7s ease-out forwards;
+  }
+  @keyframes fwShoot {
+    0%   { transform: translate(0,0) scale(1); opacity: 1; }
+    20%  { opacity: 1; }
+    100% { transform: translate(var(--tx), var(--ty)) scale(.15); opacity: 0; }
+  }
+  @keyframes fwGlow {
+    0%   { transform: scale(.1); opacity: .9; }
+    50%  { transform: scale(1.2); opacity: .5; }
+    100% { transform: scale(1.8); opacity: 0; }
   }
 
   /* ── Onboarding hint ── */
@@ -749,7 +778,7 @@
   </div><!-- /info-panel -->
 </div><!-- /layout -->
 
-<canvas id="fireworksCanvas"></canvas>
+
 
 <script>
 const canvas = document.getElementById('areaCanvas');
@@ -1152,107 +1181,66 @@ function checkChallenge(w, h) {
   }
 }
 
-/* ── Fireworks ── */
-const fwCanvas = document.getElementById('fireworksCanvas');
-const fwCtx = fwCanvas.getContext('2d');
-let fwParticles = [];
-let fwAnimating = false;
-const fwColors = ['#ff6b6b','#ff9f43','#ffd32a','#26de81','#45aaf2','#a55eea','#fd79a8','#00d2d3','#fff','#f368e0'];
-
-function resizeFwCanvas() {
-  fwCanvas.width = window.innerWidth;
-  fwCanvas.height = window.innerHeight;
-}
-resizeFwCanvas();
-window.addEventListener('resize', resizeFwCanvas);
-
-class FwParticle {
-  constructor(x, y, color, angle, speed, life) {
-    this.x = x; this.y = y;
-    this.color = color;
-    this.vx = Math.cos(angle) * speed;
-    this.vy = Math.sin(angle) * speed;
-    this.alpha = 1;
-    this.life = life;
-    this.decay = 1 / life;
-    this.radius = 2 + Math.random() * 2.5;
-    this.trail = [];
-  }
-  update() {
-    this.trail.push({ x: this.x, y: this.y, alpha: this.alpha * 0.5 });
-    if (this.trail.length > 6) this.trail.shift();
-    this.x += this.vx;
-    this.y += this.vy;
-    this.vy += 0.04;       // gravity
-    this.vx *= 0.985;
-    this.vy *= 0.985;
-    this.alpha -= this.decay;
-  }
-  draw(ctx) {
-    // trail
-    for (const t of this.trail) {
-      ctx.globalAlpha = t.alpha * 0.3;
-      ctx.beginPath();
-      ctx.arc(t.x, t.y, this.radius * 0.6, 0, Math.PI * 2);
-      ctx.fillStyle = this.color;
-      ctx.fill();
-    }
-    // main dot
-    ctx.globalAlpha = this.alpha;
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-    ctx.shadowBlur = 12;
-    ctx.shadowColor = this.color;
-    ctx.fillStyle = this.color;
-    ctx.fill();
-    ctx.shadowBlur = 0;
-  }
-}
-
-function spawnBurst(cx, cy) {
-  const count = 60 + Math.floor(Math.random() * 30);
-  const palette = [];
-  const base = fwColors[Math.floor(Math.random() * fwColors.length)];
-  const accent = fwColors[Math.floor(Math.random() * fwColors.length)];
-  for (let i = 0; i < count; i++) {
-    const angle = (Math.PI * 2 / count) * i + (Math.random() - 0.5) * 0.3;
-    const speed = 2 + Math.random() * 4;
-    const life = 50 + Math.random() * 40;
-    const color = Math.random() < 0.6 ? base : accent;
-    fwParticles.push(new FwParticle(cx, cy, color, angle, speed, life));
-  }
-}
-
-function fwLoop() {
-  if (!fwAnimating) return;
-  fwCtx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
-  for (let i = fwParticles.length - 1; i >= 0; i--) {
-    const p = fwParticles[i];
-    p.update();
-    p.draw(fwCtx);
-    if (p.alpha <= 0) fwParticles.splice(i, 1);
-  }
-  fwCtx.globalAlpha = 1;
-  if (fwParticles.length > 0) {
-    requestAnimationFrame(fwLoop);
-  } else {
-    fwCtx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
-    fwAnimating = false;
-  }
-}
+/* ── Fireworks (in-panel) ── */
+const FW_COLORS = ['#ff6b6b','#ff9f43','#ffd32a','#26de81','#45aaf2','#a55eea','#fd79a8','#00d2d3','#f368e0'];
 
 function launchFireworks() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const W = fwCanvas.width, H = fwCanvas.height;
-  // 3 bursts at slightly random positions around center
-  for (let i = 0; i < 3; i++) {
-    const cx = W * (0.3 + Math.random() * 0.4);
-    const cy = H * (0.25 + Math.random() * 0.3);
-    setTimeout(() => spawnBurst(cx, cy), i * 200);
+  const target = challengeActive ? levelPanel : challengeBox;
+  // ensure container
+  let container = target.querySelector('.fw-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.className = 'fw-container';
+    target.appendChild(container);
   }
-  if (!fwAnimating) {
-    fwAnimating = true;
-    requestAnimationFrame(fwLoop);
+  // spawn 3 bursts staggered
+  [0, 120, 250].forEach(delay => {
+    setTimeout(() => spawnBurst(container, target), delay);
+  });
+}
+
+function spawnBurst(container, target) {
+  const rect = target.getBoundingClientRect();
+  const cx = rect.width / 2 + (Math.random() - 0.5) * rect.width * 0.3;
+  const cy = rect.height / 2 + (Math.random() - 0.5) * rect.height * 0.25;
+
+  // glow flash
+  const glow = document.createElement('div');
+  glow.className = 'fw-glow';
+  const gc = FW_COLORS[Math.floor(Math.random() * FW_COLORS.length)];
+  glow.style.background = `radial-gradient(circle, ${gc}88 0%, ${gc}33 50%, transparent 70%)`;
+  glow.style.left = cx + 'px';
+  glow.style.top = cy + 'px';
+  glow.style.margin = '-30px 0 0 -30px';
+  container.appendChild(glow);
+  setTimeout(() => glow.remove(), 750);
+
+  // particles
+  const count = 28 + Math.floor(Math.random() * 12);
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'fw-particle';
+    const color = FW_COLORS[Math.floor(Math.random() * FW_COLORS.length)];
+    const size = 4 + Math.random() * 5;
+    const angle = (Math.PI * 2 / count) * i + (Math.random() - 0.5) * 0.4;
+    const dist = 50 + Math.random() * 80;
+    const tx = Math.cos(angle) * dist;
+    const ty = Math.sin(angle) * dist;
+    const dur = 0.6 + Math.random() * 0.5;
+
+    p.style.cssText = `
+      left:${cx}px; top:${cy}px;
+      width:${size}px; height:${size}px;
+      margin-left:${-size/2}px; margin-top:${-size/2}px;
+      background:${color};
+      box-shadow: 0 0 ${size+4}px ${color}, 0 0 ${size*2}px ${color}44;
+      --tx:${tx}px; --ty:${ty}px;
+      --dur:${dur}s;
+      --delay:${Math.random() * 0.1}s;
+    `;
+    container.appendChild(p);
+    setTimeout(() => p.remove(), (dur + 0.15) * 1000);
   }
 }
 
