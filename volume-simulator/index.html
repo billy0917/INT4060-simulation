@@ -337,6 +337,75 @@
   @media (max-width: 360px) {
     .num-btn { width: 32px; height: 32px; font-size: .85rem; border-radius: 10px; }
   }
+
+  /* ── Layer-by-layer button ── */
+  .layer-btn {
+    font-family: inherit;
+    font-size: .95rem;
+    font-weight: 700;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 40px;
+    background: var(--clay-light);
+    color: var(--accent-dark);
+    box-shadow: var(--shadow-btn);
+    cursor: pointer;
+    transition: all .25s;
+    min-height: 44px;
+    margin-bottom: 12px;
+  }
+  .layer-btn:hover { transform: translateY(-2px); }
+  .layer-btn:active { box-shadow: var(--shadow-in); transform: translateY(0); }
+  .layer-btn.playing { background: var(--accent); color: var(--clay-light); }
+  .layer-counter {
+    font-size: .9rem;
+    font-weight: 700;
+    color: var(--accent-dark);
+    text-align: center;
+    min-height: 20px;
+    margin-bottom: 8px;
+  }
+
+  /* ── Difficulty selector ── */
+  .difficulty-bar {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    max-width: 600px;
+    width: 100%;
+    margin-top: 10px;
+  }
+  .diff-btn {
+    font-family: inherit;
+    font-size: .9rem;
+    font-weight: 700;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 30px;
+    background: var(--clay-light);
+    color: var(--text-soft);
+    box-shadow: var(--shadow-btn);
+    cursor: pointer;
+    transition: all .25s;
+    min-height: 38px;
+  }
+  .diff-btn:hover { transform: translateY(-1px); }
+  .diff-btn.active-easy { background: #a5d6a7; color: #2e7d32; box-shadow: var(--shadow-in); }
+  .diff-btn.active-medium { background: #ffe082; color: #f57f17; box-shadow: var(--shadow-in); }
+  .diff-btn.active-hard { background: #ef9a9a; color: #c62828; box-shadow: var(--shadow-in); }
+
+  /* ── Formula tip ── */
+  .formula-tip {
+    font-size: .85rem;
+    color: var(--text-soft);
+    font-weight: 600;
+    margin-top: 6px;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: all .3s;
+  }
+  .formula-tip.show { opacity: 1; max-height: 40px; }
 </style>
 </head>
 <body>
@@ -370,14 +439,23 @@
 </div>
 
 <div class="viewport" id="viewport">
-  <div class="drag-hint" id="dragHint">Drag to rotate</div>
+  <div class="drag-hint" id="dragHint">Drag to rotate · Arrow keys to spin</div>
 </div>
+
+<div class="layer-counter" id="layerCounter"></div>
+<button class="layer-btn" id="layerBtn" onclick="startLayerByLayer()">Build Layer by Layer</button>
 
 <div class="formula-box">
   <div class="formula" id="formulaLine"></div>
   <div class="result" id="resultLine"></div>
+  <div class="formula-tip" id="formulaTip"></div>
 </div>
 
+<div class="difficulty-bar">
+  <button class="diff-btn active-easy" data-diff="easy" onclick="setDifficulty('easy')">Easy</button>
+  <button class="diff-btn" data-diff="medium" onclick="setDifficulty('medium')">Medium</button>
+  <button class="diff-btn" data-diff="hard" onclick="setDifficulty('hard')">Hard</button>
+</div>
 <div class="challenge-box">
   <div class="challenge-title">Challenge</div>
   <div class="challenge-text" id="challengeText"></div>
@@ -418,12 +496,22 @@ const challengeText   = document.getElementById('challengeText');
 const challengeStatus = document.getElementById('challengeStatus');
 const viewportEl      = document.getElementById('viewport');
 const dragHint        = document.getElementById('dragHint');
+const layerBtn        = document.getElementById('layerBtn');
+const layerCounter    = document.getElementById('layerCounter');
+const formulaTip      = document.getElementById('formulaTip');
 
 let currentShape = 'cuboid';
 let targetVol = 0;
+let targetConstraint = ''; // for hard mode: e.g. "one side must be 3"
+let difficulty = 'easy';
 let cubeGroup = null;
+let labelGroup = null;
+let groundPlane = null;
 let animStartTime = 0;
 let animRunning = false;
+let layerByLayerMode = false;
+let layerTimer = null;
+let visibleLayers = 0;
 let lastChallengeCorrect = false;
 const challengeBox = document.querySelector('.challenge-box');
 
@@ -529,6 +617,76 @@ const dirLight = new THREE.DirectionalLight(0xffffff, 0.85);
 dirLight.position.set(10, 15, 10);
 scene.add(dirLight);
 
+/* ── Ground Plane ── */
+function updateGroundPlane(l, w, h) {
+  if (groundPlane) { scene.remove(groundPlane); groundPlane = null; }
+  const size = Math.max(l, w) * 2.5;
+  const geo = new THREE.PlaneGeometry(size, size);
+  const mat = new THREE.MeshBasicMaterial({ color: 0xe4ded5, transparent: true, opacity: 0.5, side: THREE.DoubleSide });
+  groundPlane = new THREE.Mesh(geo, mat);
+  groundPlane.rotation.x = -Math.PI / 2;
+  groundPlane.position.y = -(h * (1 + 0.06)) / 2 - 0.1;
+  scene.add(groundPlane);
+
+  // grid lines on ground
+  const gridHelper = new THREE.GridHelper(size, Math.round(size), 0xd7ccc8, 0xd7ccc8);
+  gridHelper.position.y = groundPlane.position.y + 0.01;
+  groundPlane.add(gridHelper);
+}
+
+/* ── Dimension Labels (Three.js Sprites) ── */
+function createTextSprite(text, color) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 128; canvas.height = 64;
+  const ctx = canvas.getContext('2d');
+  ctx.font = 'bold 48px Nunito, sans-serif';
+  ctx.fillStyle = color;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, 64, 32);
+  const texture = new THREE.CanvasTexture(canvas);
+  const mat = new THREE.SpriteMaterial({ map: texture, transparent: true });
+  const sprite = new THREE.Sprite(mat);
+  sprite.scale.set(1.2, 0.6, 1);
+  return sprite;
+}
+
+function updateDimensionLabels(l, w, h) {
+  if (labelGroup) { scene.remove(labelGroup); }
+  labelGroup = new THREE.Group();
+  const offX = (l * (1 + gap)) / 2;
+  const offY = (h * (1 + gap)) / 2;
+  const offZ = (w * (1 + gap)) / 2;
+
+  // L label (along X axis) — coral
+  const lbl_L = createTextSprite('L=' + l, '#c47a62');
+  lbl_L.position.set(0, -offY - 0.8, offZ + 0.8);
+  labelGroup.add(lbl_L);
+
+  // W label (along Z axis) — blue
+  const lbl_W = createTextSprite('W=' + w, '#5a7bbf');
+  lbl_W.position.set(offX + 0.8, -offY - 0.8, 0);
+  labelGroup.add(lbl_W);
+
+  // H label (along Y axis) — green
+  const lbl_H = createTextSprite('H=' + h, '#6da87e');
+  lbl_H.position.set(offX + 0.8, 0, offZ + 0.8);
+  labelGroup.add(lbl_H);
+
+  scene.add(labelGroup);
+}
+
+/* ── Keyboard Controls ── */
+document.addEventListener('keydown', (e) => {
+  const speed = 0.08;
+  let handled = false;
+  if (e.key === 'ArrowLeft')  { controls.autoRotate = false; camera.position.applyAxisAngle(new THREE.Vector3(0,1,0), speed); handled = true; }
+  if (e.key === 'ArrowRight') { controls.autoRotate = false; camera.position.applyAxisAngle(new THREE.Vector3(0,1,0), -speed); handled = true; }
+  if (e.key === 'ArrowUp')    { controls.autoRotate = false; camera.position.y += 0.5; handled = true; }
+  if (e.key === 'ArrowDown')  { controls.autoRotate = false; camera.position.y -= 0.5; handled = true; }
+  if (handled) { camera.lookAt(0, 0, 0); controls.update(); e.preventDefault(); }
+});
+
 /* ── Resize ── */
 function resizeViewport() {
   const w = viewportEl.clientWidth;
@@ -610,11 +768,22 @@ function buildScene() {
   }
   scene.add(cubeGroup);
 
+  // Ground plane + dimension labels
+  updateGroundPlane(l, w, h);
+  updateDimensionLabels(l, w, h);
+
   // Camera framing
   const maxDim = Math.max(l, w, h);
   camera.position.set(maxDim * 1.2, maxDim * 1.2, maxDim * 2);
   controls.target.set(0, 0, 0);
   controls.update();
+
+  // Reset layer-by-layer state
+  layerByLayerMode = false;
+  if (layerTimer) { clearInterval(layerTimer); layerTimer = null; }
+  layerBtn.classList.remove('playing');
+  layerBtn.textContent = 'Build Layer by Layer';
+  layerCounter.textContent = '';
 
   // Start emergence animation
   animStartTime = performance.now();
@@ -646,6 +815,7 @@ let initDone = false;
 function onInput() {
   if (initDone) dismissHint();
   if (initDone) SFX.tick();
+  resetIdleTimer();
   const l = getL(), w = getW(), h = getH();
   lenVal.textContent = l;
   wVal.textContent = currentShape === 'cube' ? l : w;
@@ -663,10 +833,13 @@ function updateFormula(l, w, h) {
   const vol = l * w * h;
   if (currentShape === 'cube') {
     formulaLine.innerHTML = `Volume = <span class="hl-l">${l}</span> × <span class="hl-l">${l}</span> × <span class="hl-l">${l}</span>`;
+    formulaTip.textContent = `${l} × ${l} = ${l*l} cubes per layer × ${l} layers = ${vol}`;
   } else {
     formulaLine.innerHTML = `Volume = <span class="hl-l">${l}</span> × <span class="hl-w">${w}</span> × <span class="hl-h">${h}</span>`;
+    formulaTip.textContent = `${l} × ${w} = ${l*w} cubes per layer × ${h} layers = ${vol}`;
   }
   resultLine.textContent = `= ${vol} unit cubes`;
+  formulaTip.classList.add('show');
 }
 
 /* animate the result counter */
@@ -685,27 +858,132 @@ function updateFormulaAnimated(l, w, h, elapsed) {
   resultLine.textContent = `= ${displayCount} unit cubes`;
 }
 
+/* ── Layer by Layer ── */
+function startLayerByLayer() {
+  if (layerByLayerMode) {
+    // Stop it
+    clearInterval(layerTimer); layerTimer = null;
+    layerByLayerMode = false;
+    layerBtn.classList.remove('playing');
+    layerBtn.textContent = 'Build Layer by Layer';
+    layerCounter.textContent = '';
+    // Show all cubes fully
+    if (cubeGroup) cubeGroup.children.forEach(m => {
+      m.scale.setScalar(1); m.material.opacity = 1;
+      m.position.y = m.userData.targetPos.y;
+      if (m.children[0]) m.children[0].material.opacity = 1;
+    });
+    animRunning = false;
+    return;
+  }
+
+  layerByLayerMode = true;
+  layerBtn.classList.add('playing');
+  layerBtn.textContent = 'Stop';
+  visibleLayers = 0;
+  const l = getL(), w = getW(), h = getH();
+  const cubesPerLayer = l * w;
+
+  // Hide all cubes first
+  if (cubeGroup) cubeGroup.children.forEach(m => {
+    m.scale.setScalar(0); m.material.opacity = 0;
+    if (m.children[0]) m.children[0].material.opacity = 0;
+  });
+  animRunning = false;
+  layerCounter.textContent = `Layer 0 / ${h}`;
+
+  layerTimer = setInterval(() => {
+    if (visibleLayers >= h) {
+      clearInterval(layerTimer); layerTimer = null;
+      layerByLayerMode = false;
+      layerBtn.classList.remove('playing');
+      layerBtn.textContent = 'Build Layer by Layer';
+      layerCounter.textContent = `All ${h} layers shown! Total = ${l * w * h} cubes`;
+      return;
+    }
+    // Reveal next layer
+    if (cubeGroup) {
+      cubeGroup.children.forEach(m => {
+        if (m.userData.layer === visibleLayers) {
+          m.scale.setScalar(1); m.material.opacity = 1;
+          m.position.y = m.userData.targetPos.y;
+          if (m.children[0]) m.children[0].material.opacity = 1;
+        }
+      });
+    }
+    visibleLayers++;
+    layerCounter.textContent = `Layer ${visibleLayers} / ${h} — ${visibleLayers * cubesPerLayer} cubes so far`;
+  }, 1200);
+}
+
+/* ── Difficulty System ── */
+function setDifficulty(diff) {
+  difficulty = diff;
+  document.querySelectorAll('.diff-btn').forEach(b => {
+    b.className = 'diff-btn';
+    if (b.dataset.diff === diff) b.classList.add('active-' + diff);
+  });
+  newChallenge();
+}
+
 /* ── Challenge ── */
 function newChallenge() {
-  const vols = [6, 8, 10, 12, 16, 18, 20, 24, 27, 30];
-  targetVol = vols[Math.floor(Math.random() * vols.length)];
-  challengeText.textContent = `Can you make a shape with volume = ${targetVol}?`;
+  lastChallengeCorrect = false;
+  targetConstraint = '';
+
+  if (difficulty === 'easy') {
+    const vols = [6, 8, 10, 12, 16, 18];
+    targetVol = vols[Math.floor(Math.random() * vols.length)];
+    challengeText.textContent = `Can you make a shape with volume = ${targetVol}?`;
+  } else if (difficulty === 'medium') {
+    const vols = [12, 16, 18, 20, 24, 27, 30, 36];
+    targetVol = vols[Math.floor(Math.random() * vols.length)];
+    challengeText.textContent = `Can you make a shape with volume = ${targetVol}?`;
+  } else {
+    // Hard: volume + constraint
+    const combos = [
+      { v: 24, c: 'height must be 3' }, { v: 24, c: 'width must be 4' },
+      { v: 30, c: 'length must be 5' }, { v: 36, c: 'height must be 4' },
+      { v: 12, c: 'height must be 2' }, { v: 18, c: 'width must be 3' },
+      { v: 27, c: 'all sides equal' },  { v: 8, c: 'all sides equal' },
+    ];
+    const pick = combos[Math.floor(Math.random() * combos.length)];
+    targetVol = pick.v;
+    targetConstraint = pick.c;
+    challengeText.textContent = `Volume = ${targetVol} AND ${targetConstraint}`;
+  }
+
   challengeStatus.textContent = '';
   challengeStatus.className = 'status';
-  lastChallengeCorrect = false;
   checkChallenge(getL(), getW(), getH());
 }
+
+function checkConstraint(l, w, h) {
+  if (!targetConstraint) return true;
+  if (targetConstraint === 'all sides equal') return l === w && w === h;
+  if (targetConstraint.includes('height must be')) return h === parseInt(targetConstraint.match(/\d+/)[0]);
+  if (targetConstraint.includes('width must be')) return w === parseInt(targetConstraint.match(/\d+/)[0]);
+  if (targetConstraint.includes('length must be')) return l === parseInt(targetConstraint.match(/\d+/)[0]);
+  return true;
+}
+
 function checkChallenge(l, w, h) {
   if (!targetVol) return;
   const vol = l * w * h;
-  if (vol === targetVol) {
+  const volOk = vol === targetVol;
+  const conOk = checkConstraint(l, w, h);
+
+  if (volOk && conOk) {
     challengeStatus.textContent = 'Well done!';
     challengeStatus.className = 'status status-success';
     if (!lastChallengeCorrect) { SFX.success(); spawnConfetti(); celebratePulse(); }
     lastChallengeCorrect = true;
   } else {
-    if (!lastChallengeCorrect && challengeStatus.textContent !== '') { SFX.hint(); }
-    challengeStatus.textContent = vol < targetVol ? 'Need more!' : 'Too much!';
+    let hints = [];
+    if (!volOk) hints.push(vol < targetVol ? 'Volume: need more!' : 'Volume: too much!');
+    if (!conOk) hints.push('Constraint not met');
+    if (!lastChallengeCorrect && challengeStatus.textContent !== '') SFX.hint();
+    challengeStatus.textContent = hints.join(' · ') || 'Keep trying!';
     challengeStatus.className = 'status status-hint';
     lastChallengeCorrect = false;
   }
@@ -779,6 +1057,8 @@ function showHint() {
 window.setShape = setShape;
 window.onInput = onInput;
 window.newChallenge = newChallenge;
+window.startLayerByLayer = startLayerByLayer;
+window.setDifficulty = setDifficulty;
 
 /* ── Render loop with emergence animation ── */
 function tick() {
