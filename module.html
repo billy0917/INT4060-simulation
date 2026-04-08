@@ -392,17 +392,116 @@
     .nav-bar { gap: 6px; padding: 10px 10px 8px; }
     .nav-btn { padding: 8px 12px; font-size: .8rem; min-height: 44px; }
   }
+
+  /* ── Kid-friendly visual grids ── */
+  .obj-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 14px;
+    margin-top: 16px;
+  }
+  .obj-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background: var(--clay-mid);
+    border-radius: 16px;
+    padding: 18px 12px;
+    box-shadow: var(--shadow-in);
+    font-size: .92rem;
+    line-height: 1.5;
+    font-weight: 600;
+  }
+  .obj-icon {
+    font-size: 2rem;
+    margin-bottom: 6px;
+  }
+
+  /* ── Icon list (emoji bullets) ── */
+  .icon-list {
+    list-style: none;
+    padding: 0;
+  }
+  .icon-list li {
+    padding: 5px 0;
+    line-height: 1.7;
+    font-size: .95rem;
+  }
+
+  /* ── Formula pills ── */
+  .formula-pill {
+    background: rgba(255,255,255,.45);
+    border-radius: 12px;
+    padding: 8px 14px;
+    margin-bottom: 8px;
+    font-size: .95rem;
+    line-height: 1.6;
+  }
+  .formula-pill:last-child { margin-bottom: 0; }
+
+  /* ── Takeaway grid ── */
+  .takeaway-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .takeaway-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--clay-mid);
+    border-radius: 14px;
+    padding: 14px 16px;
+    box-shadow: var(--shadow-in);
+    font-size: .93rem;
+    line-height: 1.5;
+  }
+  .takeaway-icon {
+    font-size: 1.6rem;
+    flex-shrink: 0;
+  }
+
+  /* ── Next-steps grid (quiz) ── */
+  .next-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  .next-item {
+    background: var(--clay-mid);
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: var(--shadow-in);
+    font-size: .93rem;
+    line-height: 1.6;
+  }
+
+  /* ── Inline SVG illustrations ── */
+  .illust-svg {
+    display: block;
+    max-width: 180px;
+    margin: 12px auto;
+  }
+
+  @media (max-width: 520px) {
+    .obj-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .takeaway-grid, .next-grid { grid-template-columns: 1fr; }
+    .illust-svg { max-width: 140px; }
+  }
 </style>
 </head>
 <body>
 
 <!-- Navigation -->
 <nav class="nav-bar">
-  <button class="nav-btn active" onclick="showSection('home', this)">Home</button>
-  <button class="nav-btn" onclick="showSection('area', this)">Learn: Area</button>
-  <button class="nav-btn" onclick="showSection('volume', this)">Learn: Volume</button>
-  <button class="nav-btn" onclick="showSection('summary', this)">Summary</button>
-  <button class="nav-btn" onclick="showSection('quiz', this)">Quiz</button>
+  <button class="nav-btn active" onclick="showSection('home', this)">🏠 Home</button>
+  <button class="nav-btn" onclick="showSection('area', this)">📐 Area</button>
+  <button class="nav-btn" onclick="showSection('volume', this)">📦 Volume</button>
+  <button class="nav-btn" onclick="showSection('summary', this)">📋 Summary</button>
+  <button class="nav-btn" onclick="showSection('quiz', this)">✏️ Quiz</button>
 </nav>
 
 <!-- Progress Bar -->
@@ -421,35 +520,56 @@
 <!-- ═══════════════════════════════════════════ HOME ═══════════════════════════════════════════ -->
 <section class="section active" id="sec-home">
 
-  <h1>Area & Volume Explorer</h1>
-  <p class="subtitle">An Interactive Learning Module for Young Learners</p>
+  <h1>🎉 Area & Volume Explorer</h1>
+  <p class="subtitle">Let's Learn Maths with Fun Simulators!</p>
 
-  <div class="clay">
-    <p>Welcome to the <strong>Area & Volume Explorer</strong>! In this module you will learn two important maths concepts through fun, interactive simulators.</p>
-    <p>Drag sliders, count squares and cubes, rotate 3D shapes, and take on challenges — all by yourself!</p>
+  <div class="clay" style="text-align:center;">
+    <p style="font-size:1.15rem;">Welcome! In this module, you'll <strong>play with shapes</strong>, count squares and cubes, and solve fun challenges! 🚀</p>
   </div>
 
   <div class="duo-row">
     <div class="clay duo-card">
+      <div style="font-size:3.5rem; margin-bottom:8px;">📐</div>
       <h3 class="color-area">Area</h3>
-      <p>How much space does a flat shape cover? Explore rectangles and squares by counting unit squares.</p>
+      <p>How much space does a flat shape cover?<br>Count the little squares inside!</p>
+      <!-- mini SVG illustration: a grid of coloured squares -->
+      <svg viewBox="0 0 120 80" width="120" height="80" style="margin-top:10px;" aria-hidden="true">
+        <rect x="10" y="10" width="20" height="20" rx="3" fill="#f3c9b4" stroke="#d4856a" stroke-width="1.5"/>
+        <rect x="32" y="10" width="20" height="20" rx="3" fill="#f3c9b4" stroke="#d4856a" stroke-width="1.5"/>
+        <rect x="54" y="10" width="20" height="20" rx="3" fill="#f3c9b4" stroke="#d4856a" stroke-width="1.5"/>
+        <rect x="10" y="32" width="20" height="20" rx="3" fill="#f3c9b4" stroke="#d4856a" stroke-width="1.5"/>
+        <rect x="32" y="32" width="20" height="20" rx="3" fill="#f3c9b4" stroke="#d4856a" stroke-width="1.5"/>
+        <rect x="54" y="32" width="20" height="20" rx="3" fill="#f3c9b4" stroke="#d4856a" stroke-width="1.5"/>
+        <text x="88" y="38" font-size="16" font-weight="800" fill="#d4856a" font-family="Nunito,sans-serif">= 6</text>
+      </svg>
     </div>
     <div class="clay duo-card">
+      <div style="font-size:3.5rem; margin-bottom:8px;">📦</div>
       <h3 class="color-vol">Volume</h3>
-      <p>How much space does a 3D shape fill? Stack unit cubes inside cuboids and cubes to find out.</p>
+      <p>How much space does a 3D shape fill?<br>Stack the cubes and count them!</p>
+      <!-- mini SVG illustration: 3D-ish cubes -->
+      <svg viewBox="0 0 120 90" width="120" height="90" style="margin-top:10px;" aria-hidden="true">
+        <g transform="translate(20,30)">
+          <rect x="0" y="0" width="22" height="22" rx="3" fill="#c8c9e8" stroke="#7b7fc7" stroke-width="1.5"/>
+          <rect x="24" y="0" width="22" height="22" rx="3" fill="#c8c9e8" stroke="#7b7fc7" stroke-width="1.5"/>
+          <rect x="0" y="-18" width="22" height="22" rx="3" fill="#dddcf0" stroke="#7b7fc7" stroke-width="1.5"/>
+          <rect x="24" y="-18" width="22" height="22" rx="3" fill="#dddcf0" stroke="#7b7fc7" stroke-width="1.5"/>
+          <text x="58" y="18" font-size="16" font-weight="800" fill="#7b7fc7" font-family="Nunito,sans-serif">= 4</text>
+        </g>
+      </svg>
     </div>
   </div>
 
   <div class="clay">
-    <h2 class="color-green">Learning Objectives</h2>
-    <ul class="obj-list">
-      <li>Understand what <strong>area</strong> means and calculate the area of squares and rectangles</li>
-      <li>Understand what <strong>perimeter</strong> means and how it differs from area</li>
-      <li>Understand what <strong>volume</strong> means and calculate the volume of cubes and cuboids</li>
-      <li>Use the formula <strong>Area = width × height</strong> and <strong>Perimeter = 2 × (width + height)</strong></li>
-      <li>Use the formula <strong>Volume = length × width × height</strong></li>
-      <li>Develop spatial reasoning through visual and hands-on exploration</li>
-    </ul>
+    <h2 class="color-green">🎯 What You'll Learn</h2>
+    <div class="obj-grid">
+      <div class="obj-item"><span class="obj-icon">🟧</span> What <strong>area</strong> means</div>
+      <div class="obj-item"><span class="obj-icon">🔲</span> What <strong>perimeter</strong> means</div>
+      <div class="obj-item"><span class="obj-icon">🟦</span> What <strong>volume</strong> means</div>
+      <div class="obj-item"><span class="obj-icon">✖️</span> Area = width × height</div>
+      <div class="obj-item"><span class="obj-icon">📏</span> Perimeter = 2 × (w + h)</div>
+      <div class="obj-item"><span class="obj-icon">📐</span> Volume = l × w × h</div>
+    </div>
   </div>
 
 </section>
@@ -457,19 +577,44 @@
 <!-- ═══════════════════════════════════════════ AREA ═══════════════════════════════════════════ -->
 <section class="section full-width" id="sec-area">
 
-  <h1 class="color-area">Exploring Area</h1>
+  <h1 class="color-area">📐 Exploring Area</h1>
   <p class="subtitle">Learn how to measure the space inside flat shapes</p>
 
   <div class="clay">
-    <h2>What is Area?</h2>
-    <p>Area is the amount of space inside a <strong>flat (2D) shape</strong>. We measure area in <strong>square units</strong> — think of it as counting how many small squares fit inside the shape.</p>
-    <p><strong>Perimeter</strong> is the total distance around the outside of a shape — like building a fence around a garden.</p>
-    <div class="pill-row">
-      <span class="pill area">Rectangle: Area = width × height</span>
-      <span class="pill area">Square: Area = side × side</span>
-      <span class="pill area">Perimeter = 2 × (width + height)</span>
+    <h2>What is Area? 🤔</h2>
+    <div style="display:flex; gap:24px; align-items:center; flex-wrap:wrap;">
+      <div style="flex:1; min-width:240px;">
+        <p>Area is the <strong>space inside</strong> a flat shape. Count the little squares to find it!</p>
+        <p><strong>Perimeter</strong> is the <strong>distance around</strong> the outside — like a fence around a garden! 🌳</p>
+      </div>
+      <!-- SVG: visual example of a 5×3 grid with area label -->
+      <svg viewBox="0 0 200 140" width="200" height="140" style="flex-shrink:0;" aria-label="A 5 by 3 rectangle made of 15 unit squares">
+        <g transform="translate(5,5)">
+          <rect x="0" y="0" width="30" height="30" rx="3" fill="#f9ddd0" stroke="#d4856a" stroke-width="1.2"/>
+          <rect x="32" y="0" width="30" height="30" rx="3" fill="#f9ddd0" stroke="#d4856a" stroke-width="1.2"/>
+          <rect x="64" y="0" width="30" height="30" rx="3" fill="#f9ddd0" stroke="#d4856a" stroke-width="1.2"/>
+          <rect x="96" y="0" width="30" height="30" rx="3" fill="#f9ddd0" stroke="#d4856a" stroke-width="1.2"/>
+          <rect x="128" y="0" width="30" height="30" rx="3" fill="#f9ddd0" stroke="#d4856a" stroke-width="1.2"/>
+          <rect x="0" y="32" width="30" height="30" rx="3" fill="#f9ddd0" stroke="#d4856a" stroke-width="1.2"/>
+          <rect x="32" y="32" width="30" height="30" rx="3" fill="#f9ddd0" stroke="#d4856a" stroke-width="1.2"/>
+          <rect x="64" y="32" width="30" height="30" rx="3" fill="#f9ddd0" stroke="#d4856a" stroke-width="1.2"/>
+          <rect x="96" y="32" width="30" height="30" rx="3" fill="#f9ddd0" stroke="#d4856a" stroke-width="1.2"/>
+          <rect x="128" y="32" width="30" height="30" rx="3" fill="#f9ddd0" stroke="#d4856a" stroke-width="1.2"/>
+          <rect x="0" y="64" width="30" height="30" rx="3" fill="#f9ddd0" stroke="#d4856a" stroke-width="1.2"/>
+          <rect x="32" y="64" width="30" height="30" rx="3" fill="#f9ddd0" stroke="#d4856a" stroke-width="1.2"/>
+          <rect x="64" y="64" width="30" height="30" rx="3" fill="#f9ddd0" stroke="#d4856a" stroke-width="1.2"/>
+          <rect x="96" y="64" width="30" height="30" rx="3" fill="#f9ddd0" stroke="#d4856a" stroke-width="1.2"/>
+          <rect x="128" y="64" width="30" height="30" rx="3" fill="#f9ddd0" stroke="#d4856a" stroke-width="1.2"/>
+        </g>
+        <text x="85" y="120" text-anchor="middle" font-size="11" font-weight="700" fill="#d4856a" font-family="Nunito,sans-serif">width = 5</text>
+        <text x="175" y="55" font-size="11" font-weight="700" fill="#d4856a" font-family="Nunito,sans-serif" transform="rotate(90 175 55)">height = 3</text>
+        <text x="85" y="136" text-anchor="middle" font-size="13" font-weight="800" fill="#d4856a" font-family="Nunito,sans-serif">Area = 5 × 3 = 15 ✨</text>
+      </svg>
     </div>
-    <p>For example, a rectangle with width 5 and height 3 has an area of <strong>5 × 3 = 15 square units</strong>.</p>
+    <div class="pill-row">
+      <span class="pill area">📐 Area = width × height</span>
+      <span class="pill area">📏 Perimeter = 2 × (w + h)</span>
+    </div>
   </div>
 
   <div class="sim-wrap">
@@ -482,22 +627,22 @@
   </div>
 
   <div class="clay">
-    <h2>Guided Activity</h2>
-    <p>Follow these steps in the simulator above:</p>
+    <h2>🕹️ Try It Yourself!</h2>
+    <p>Use the simulator above and follow these steps:</p>
     <ol class="steps area-steps">
-      <li>Set the shape to <strong>Rectangle</strong>. Set width = 5 and height = 3. How many unit squares do you see? <details class="answer-reveal"><summary>Show Answer</summary>15 square units</details></li>
-      <li>Now change the width to <strong>6</strong>. What happens to the area? Does it get bigger or smaller?</li>
-      <li>Turn on <strong>Show Perimeter</strong>. With width = 6 and height = 3, what is the perimeter? <details class="answer-reveal"><summary>Show Answer</summary>18 units — 2 × (6 + 3)</details></li>
-      <li>Switch to <strong>Square</strong>. Set the side length to <strong>4</strong>. What is the area? <details class="answer-reveal"><summary>Show Answer</summary>16 square units</details></li>
-      <li>Try different <strong>difficulty levels</strong> in Challenge mode — Easy, Medium, or Hard!</li>
-      <li>Ready for a real test? Click <strong>Challenge Mode 🏆</strong> to enter the level-based challenge — complete 10 stages, beat the timer, and earn stars!</li>
+      <li>Pick <strong>Rectangle</strong>. Set width = 5, height = 3. How many squares? <details class="answer-reveal"><summary>Show Answer</summary>15 squares ✨</details></li>
+      <li>Change width to <strong>6</strong>. Did the area get bigger or smaller? 🤔</li>
+      <li>Turn on <strong>Show Perimeter</strong>. What's the perimeter for 6 × 3? <details class="answer-reveal"><summary>Show Answer</summary>18 units — 2 × (6 + 3)</details></li>
+      <li>Try <strong>Square</strong> with side = 4. What's the area? <details class="answer-reveal"><summary>Show Answer</summary>16 squares!</details></li>
+      <li>Try <strong>Easy / Medium / Hard</strong> challenges in Free Play mode!</li>
+      <li>Click <strong>Challenge Mode 🏆</strong> for a 10-level challenge with stars!</li>
     </ol>
 
     <div class="think-box area-think">
-      <h3 class="color-area">Think About It</h3>
+      <h3 class="color-area">💡 Think About It</h3>
       <ul>
-        <li>If you <strong>double the width</strong> of a rectangle, what happens to the area?</li>
-        <li>Can two different rectangles have the <strong>same area</strong> but <strong>different perimeters</strong>? Try to find an example.</li>
+        <li>If you <strong>double the width</strong>, what happens to the area?</li>
+        <li>Can two rectangles have the <strong>same area</strong> but <strong>different shapes</strong>?</li>
       </ul>
     </div>
   </div>
@@ -507,17 +652,45 @@
 <!-- ═══════════════════════════════════════════ VOLUME ═══════════════════════════════════════════ -->
 <section class="section full-width" id="sec-volume">
 
-  <h1 class="color-vol">Exploring Volume</h1>
+  <h1 class="color-vol">📦 Exploring Volume</h1>
   <p class="subtitle">Learn how to measure the space inside 3D shapes</p>
 
   <div class="clay">
-    <h2>What is Volume?</h2>
-    <p>Volume is the amount of space inside a <strong>3D shape</strong>. We measure volume in <strong>cubic units</strong> — imagine stacking small cubes to fill the shape.</p>
-    <div class="pill-row">
-      <span class="pill vol">Cuboid: Volume = length × width × height</span>
-      <span class="pill vol">Cube: Volume = side × side × side</span>
+    <h2>What is Volume? 🤔</h2>
+    <div style="display:flex; gap:24px; align-items:center; flex-wrap:wrap;">
+      <div style="flex:1; min-width:240px;">
+        <p>Volume is the <strong>space inside</strong> a 3D shape. Imagine filling a box with little cubes — count them all!</p>
+        <p>A cuboid with length 4, width 3, height 2 = <strong>24 cubes</strong> inside! 🧊</p>
+      </div>
+      <!-- SVG: isometric-style cubes illustration -->
+      <svg viewBox="0 0 180 130" width="180" height="130" style="flex-shrink:0;" aria-label="A 3D cuboid made of unit cubes">
+        <defs>
+          <linearGradient id="cubeTop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#dddcf0"/><stop offset="100%" stop-color="#c8c9e8"/></linearGradient>
+          <linearGradient id="cubeFront" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#b5b6d9"/><stop offset="100%" stop-color="#9a9bcf"/></linearGradient>
+          <linearGradient id="cubeRight" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#a6a7d1"/><stop offset="100%" stop-color="#8e8fc4"/></linearGradient>
+        </defs>
+        <g transform="translate(30,20)">
+          <!-- Row of cubes (front face, simplified) -->
+          <rect x="0" y="40" width="28" height="28" rx="3" fill="url(#cubeFront)" stroke="#7b7fc7" stroke-width="1"/>
+          <rect x="30" y="40" width="28" height="28" rx="3" fill="url(#cubeFront)" stroke="#7b7fc7" stroke-width="1"/>
+          <rect x="60" y="40" width="28" height="28" rx="3" fill="url(#cubeFront)" stroke="#7b7fc7" stroke-width="1"/>
+          <!-- Top row -->
+          <rect x="0" y="10" width="28" height="28" rx="3" fill="url(#cubeTop)" stroke="#7b7fc7" stroke-width="1"/>
+          <rect x="30" y="10" width="28" height="28" rx="3" fill="url(#cubeTop)" stroke="#7b7fc7" stroke-width="1"/>
+          <rect x="60" y="10" width="28" height="28" rx="3" fill="url(#cubeTop)" stroke="#7b7fc7" stroke-width="1"/>
+          <!-- Shadow cubes behind -->
+          <rect x="10" y="0" width="28" height="28" rx="3" fill="#e8e7f5" stroke="#b5b6d9" stroke-width=".8" opacity=".5"/>
+          <rect x="40" y="0" width="28" height="28" rx="3" fill="#e8e7f5" stroke="#b5b6d9" stroke-width=".8" opacity=".5"/>
+          <rect x="70" y="0" width="28" height="28" rx="3" fill="#e8e7f5" stroke="#b5b6d9" stroke-width=".8" opacity=".5"/>
+        </g>
+        <text x="90" y="100" text-anchor="middle" font-size="11" font-weight="800" fill="#7b7fc7" font-family="Nunito,sans-serif">3 × 3 × 1 = 9 cubes</text>
+        <text x="90" y="120" text-anchor="middle" font-size="10" font-weight="600" fill="#9a9bcf" font-family="Nunito,sans-serif">Stack more layers to grow! 📈</text>
+      </svg>
     </div>
-    <p>For example, a cuboid with length 4, width 3, and height 2 has a volume of <strong>4 × 3 × 2 = 24 unit cubes</strong>.</p>
+    <div class="pill-row">
+      <span class="pill vol">📦 Cuboid: Volume = l × w × h</span>
+      <span class="pill vol">🧊 Cube: Volume = side³</span>
+    </div>
   </div>
 
   <div class="sim-wrap">
@@ -530,23 +703,23 @@
   </div>
 
   <div class="clay">
-    <h2>Guided Activity</h2>
-    <p>Follow these steps in the simulator above:</p>
+    <h2>🕹️ Try It Yourself!</h2>
+    <p>Use the simulator above and follow these steps:</p>
     <ol class="steps vol-steps">
-      <li>Set the shape to <strong>Cuboid</strong>. Set length = 4, width = 3, height = 2. Count the unit cubes. <details class="answer-reveal"><summary>Show Answer</summary>24 unit cubes</details></li>
-      <li>Click <strong>Build Layer by Layer</strong> to watch the cubes stack up. How many cubes are in each layer? <details class="answer-reveal"><summary>Show Answer</summary>12 cubes per layer (4 × 3)</details></li>
-      <li>Switch to <strong>Cube</strong>. Set the side length to <strong>3</strong>. What is the volume? <details class="answer-reveal"><summary>Show Answer</summary>27 unit cubes</details></li>
-      <li><strong>Drag to rotate</strong> or use <strong>arrow keys</strong> to view the 3D shape from different angles.</li>
-      <li>Try different <strong>difficulty levels</strong> in Challenge mode — Easy, Medium, or Hard!</li>
-      <li>Ready for a real test? Click <strong>Challenge Mode 🏆</strong> to enter the level-based challenge — complete 10 stages, beat the timer, and earn stars!</li>
+      <li>Pick <strong>Cuboid</strong>. Set length = 4, width = 3, height = 2. How many cubes? <details class="answer-reveal"><summary>Show Answer</summary>24 cubes! 🎉</details></li>
+      <li>Click <strong>Build Layer by Layer</strong> to watch them stack! How many cubes per layer? <details class="answer-reveal"><summary>Show Answer</summary>12 cubes (4 × 3)</details></li>
+      <li>Try <strong>Cube</strong> with side = 3. What's the volume? <details class="answer-reveal"><summary>Show Answer</summary>27 cubes!</details></li>
+      <li><strong>Drag to rotate</strong> the 3D shape — look at it from every angle! 🔄</li>
+      <li>Try <strong>Easy / Medium / Hard</strong> challenges in Free Play mode!</li>
+      <li>Click <strong>Challenge Mode 🏆</strong> for a 10-level challenge with stars!</li>
     </ol>
 
     <div class="think-box vol-think">
-      <h3 class="color-vol">Think About It</h3>
+      <h3 class="color-vol">💡 Think About It</h3>
       <ul>
         <li>How is <strong>volume</strong> different from <strong>area</strong>?</li>
-        <li>If you <strong>double the height</strong> of a cuboid, what happens to the volume?</li>
-        <li>A cube has side length 2. How many unit cubes fit inside? <details class="answer-reveal"><summary>Show Answer</summary>8 unit cubes</details></li>
+        <li>If you <strong>double the height</strong>, what happens to the volume?</li>
+        <li>A cube with side = 2. How many cubes inside? <details class="answer-reveal"><summary>Show Answer</summary>8 cubes!</details></li>
       </ul>
     </div>
   </div>
@@ -556,51 +729,51 @@
 <!-- ═══════════════════════════════════════════ SUMMARY ═══════════════════════════════════════════ -->
 <section class="section" id="sec-summary">
 
-  <h1>What We Learned</h1>
-  <p class="subtitle">A recap of the key concepts and formulas</p>
+  <h1>📝 What We Learned</h1>
+  <p class="subtitle">Let's look at the important stuff one more time!</p>
 
   <div class="duo-row">
     <div class="clay sum-card">
-      <h2 class="color-area">Area</h2>
+      <h2 class="color-area">📐 Area</h2>
       <div class="sum-formula area">
-        Rectangle: Area = width × height<br>
-        Square: Area = side × side<br>
-        Perimeter = 2 × (width + height)
+        <!-- Visual formula cards -->
+        <div class="formula-pill">📏 Rectangle: <strong>width × height</strong></div>
+        <div class="formula-pill">⬛ Square: <strong>side × side</strong></div>
+        <div class="formula-pill">🔲 Perimeter: <strong>2 × (width + height)</strong></div>
       </div>
-      <ul>
-        <li>Area measures the <strong>flat space</strong> inside a 2D shape</li>
-        <li>Perimeter measures the <strong>distance around</strong> the shape</li>
-        <li>Measured in <strong>square units</strong> (area) and <strong>units</strong> (perimeter)</li>
-        <li>Count the unit squares to find the area</li>
+      <ul class="icon-list">
+        <li>🟩 Area = the <strong>flat space</strong> inside a shape</li>
+        <li>🔵 Perimeter = the <strong>distance around</strong> the edge</li>
+        <li>🔢 Count the squares to find the area!</li>
       </ul>
     </div>
     <div class="clay sum-card">
-      <h2 class="color-vol">Volume</h2>
+      <h2 class="color-vol">📦 Volume</h2>
       <div class="sum-formula vol">
-        Cuboid: Volume = length × width × height<br>
-        Cube: Volume = side × side × side
+        <div class="formula-pill">📦 Cuboid: <strong>length × width × height</strong></div>
+        <div class="formula-pill">🧊 Cube: <strong>side × side × side</strong></div>
       </div>
-      <ul>
-        <li>Volume measures the <strong>space inside</strong> a 3D shape</li>
-        <li>Measured in <strong>cubic units</strong></li>
-        <li>Count the unit cubes to find the volume</li>
+      <ul class="icon-list">
+        <li>🟪 Volume = the <strong>space inside</strong> a 3D shape</li>
+        <li>🔢 Count the cubes to find the volume!</li>
+        <li>📏 Measured in <strong>cubic units</strong></li>
       </ul>
     </div>
   </div>
 
   <div class="clay takeaway">
-    <h2 class="color-green">Key Takeaways</h2>
-    <ul>
-      <li><strong>Area</strong> tells us how much flat space a 2D shape covers</li>
-      <li><strong>Volume</strong> tells us how much space a 3D shape fills</li>
-      <li>You can always <strong>count unit squares</strong> (for area) or <strong>unit cubes</strong> (for volume) to check your answer</li>
-      <li>When one dimension doubles, the area or volume <strong>also doubles</strong></li>
-    </ul>
+    <h2 class="color-green">⭐ Remember This!</h2>
+    <div class="takeaway-grid">
+      <div class="takeaway-item"><span class="takeaway-icon">📐</span> <strong>Area</strong> = flat space a 2D shape covers</div>
+      <div class="takeaway-item"><span class="takeaway-icon">📦</span> <strong>Volume</strong> = space a 3D shape fills</div>
+      <div class="takeaway-item"><span class="takeaway-icon">🔢</span> Count <strong>squares</strong> or <strong>cubes</strong> to check your answer</div>
+      <div class="takeaway-item"><span class="takeaway-icon">✖️</span> Double one side → the answer <strong>doubles too!</strong></div>
+    </div>
   </div>
 
   <div class="clay congrats-box">
-    <p><strong>Congratulations!</strong> You've completed the Area & Volume Explorer module.<br>
-    Keep exploring and have fun with maths!</p>
+    <p>🎉 <strong>Amazing job!</strong> You finished the Area &amp; Volume Explorer!<br>
+    Keep exploring and have fun with maths! 🚀</p>
   </div>
 
 </section>
@@ -608,11 +781,11 @@
 <!-- ═══════════════════════════════════════════ QUIZ ═══════════════════════════════════════════ -->
 <section class="section" id="sec-quiz">
 
-  <h1 class="color-green">Test Your Knowledge</h1>
-  <p class="subtitle">Answer the questions below to check what you have learned</p>
+  <h1 class="color-green">✏️ Quiz Time!</h1>
+  <p class="subtitle">Let's see what you remember — you got this! 💪</p>
 
   <div class="clay">
-    <p>Complete this short quiz to see how well you understand area and volume. Take your time and try your best!</p>
+    <p>Answer the questions below. Take your time and try your best! 🌟</p>
     <div class="sim-wrap">
       <iframe class="quiz-frame"
         src="https://docs.google.com/forms/d/e/1FAIpQLSdJOJdzKw5K1MR6igEdq1oolccnArlo3D6_dACVY-uEv5PauA/viewform?embedded=true"
@@ -624,14 +797,13 @@
   </div>
 
   <div class="clay" style="margin-top:28px;">
-    <h2 class="color-green">What's Next?</h2>
-    <p>Great work completing the quiz! Here are some ideas to keep learning:</p>
-    <ul style="padding-left:20px; line-height:1.9;">
-      <li>Go back to the <strong>Area Simulator</strong> and try to beat all the challenges at every difficulty level</li>
-      <li>Explore the <strong>Volume Simulator</strong> — can you find different cuboids with the same volume?</li>
-      <li>Look around your room — estimate the area of your desk, or the volume of a box</li>
-      <li>Try drawing your own shapes on graph paper and counting the squares</li>
-    </ul>
+    <h2 class="color-green">🚀 What's Next?</h2>
+    <div class="next-grid">
+      <div class="next-item">🏆 Go back and beat all the <strong>Area challenges</strong>!</div>
+      <div class="next-item">🧊 Find different cuboids with the <strong>same volume</strong>!</div>
+      <div class="next-item">🏠 Look around your room — estimate the area of your desk!</div>
+      <div class="next-item">✏️ Draw shapes on graph paper and <strong>count the squares</strong>!</div>
+    </div>
   </div>
 
 </section>
