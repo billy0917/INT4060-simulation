@@ -4,61 +4,87 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Area Explorer – Learn About Area!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
+  :root {
+    --bg: #f0ebe3;
+    --clay-light: #faf7f2;
+    --clay-mid: #ece6db;
+    --shadow-out: 8px 8px 20px rgba(0,0,0,.10), -6px -6px 16px rgba(255,255,255,.7);
+    --shadow-in: inset 4px 4px 10px rgba(0,0,0,.06), inset -4px -4px 10px rgba(255,255,255,.6);
+    --shadow-btn: 4px 4px 12px rgba(0,0,0,.12), -3px -3px 8px rgba(255,255,255,.6);
+    --accent: #d4856a;
+    --accent-dark: #b8694f;
+    --accent-light: #f3e0d6;
+    --green: #6da87e;
+    --green-light: #e2efe6;
+    --text: #3d3a36;
+    --text-soft: #7a756d;
+    --radius: 24px;
+  }
+
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    font-family: 'Segoe UI', 'Comic Sans MS', Arial, sans-serif;
-    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 16px;
+    padding: 20px 16px;
     overflow-x: hidden;
   }
 
   h1 {
-    font-size: clamp(1.4rem, 4vw, 2rem);
-    color: #e65100;
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-weight: 800;
+    color: var(--accent-dark);
     text-align: center;
-    margin-bottom: 8px;
-    text-shadow: 1px 1px 0 #fff;
+    margin-bottom: 14px;
+    letter-spacing: -.02em;
   }
 
   /* ── Shape Tabs ── */
   .tabs {
     display: flex;
-    gap: 10px;
-    margin-bottom: 14px;
+    gap: 12px;
+    margin-bottom: 16px;
   }
   .tab-btn {
-    font-size: clamp(1rem, 3vw, 1.25rem);
-    padding: 10px 28px;
-    border: 3px solid #e65100;
-    border-radius: 30px;
-    background: #fff;
-    color: #e65100;
+    font-family: inherit;
+    font-size: clamp(1rem, 3vw, 1.15rem);
     font-weight: 700;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 40px;
+    background: var(--clay-light);
+    color: var(--text-soft);
+    box-shadow: var(--shadow-btn);
     cursor: pointer;
-    transition: all .2s;
+    transition: all .25s;
+    min-height: 44px;
   }
-  .tab-btn.active, .tab-btn:hover {
-    background: #e65100;
-    color: #fff;
+  .tab-btn:hover { transform: translateY(-2px); }
+  .tab-btn.active {
+    background: var(--text);
+    color: var(--clay-light);
+    box-shadow: inset 3px 3px 8px rgba(0,0,0,.2), 2px 2px 8px rgba(0,0,0,.1);
   }
 
   /* ── Controls ── */
   .controls {
-    background: #fff;
-    border-radius: 18px;
-    padding: 16px 24px;
-    box-shadow: 0 4px 20px rgba(0,0,0,.1);
+    background: var(--clay-light);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-out);
+    padding: 20px 28px;
     display: flex;
     flex-wrap: wrap;
-    gap: 18px;
+    gap: 20px;
     justify-content: center;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
     max-width: 560px;
     width: 100%;
   }
@@ -68,53 +94,86 @@
     align-items: center;
     min-width: 140px;
     flex: 1;
+    position: relative;
   }
   .slider-group label {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 4px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
   }
   .slider-group input[type=range] {
     -webkit-appearance: none;
     width: 100%;
     height: 14px;
     border-radius: 7px;
-    background: linear-gradient(90deg, #ffcc80, #ef6c00);
+    background: var(--clay-mid);
+    box-shadow: var(--shadow-in);
     outline: none;
     cursor: pointer;
   }
   .slider-group input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 30px; height: 30px;
+    width: 44px; height: 44px;
     border-radius: 50%;
-    background: #e65100;
-    border: 3px solid #fff;
-    box-shadow: 0 2px 6px rgba(0,0,0,.3);
+    background: var(--accent);
+    border: 4px solid var(--clay-light);
+    box-shadow: var(--shadow-btn);
     cursor: grab;
   }
   .slider-group input[type=range]::-moz-range-thumb {
-    width: 30px; height: 30px;
+    width: 44px; height: 44px;
     border-radius: 50%;
-    background: #e65100;
-    border: 3px solid #fff;
-    box-shadow: 0 2px 6px rgba(0,0,0,.3);
+    background: var(--accent);
+    border: 4px solid var(--clay-light);
+    box-shadow: var(--shadow-btn);
     cursor: grab;
   }
   .slider-val {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     font-weight: 800;
-    color: #e65100;
-    margin-top: 2px;
+    color: var(--accent-dark);
+    margin-top: 4px;
+  }
+
+  /* ── Number buttons ── */
+  .num-btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+    margin-top: 8px;
+  }
+  .num-btn {
+    font-family: inherit;
+    font-size: .95rem;
+    font-weight: 700;
+    width: 38px; height: 38px;
+    border: none;
+    border-radius: 12px;
+    background: var(--clay-mid);
+    color: var(--text-soft);
+    box-shadow: 2px 2px 6px rgba(0,0,0,.08), -2px -2px 4px rgba(255,255,255,.5);
+    cursor: pointer;
+    transition: all .2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .num-btn:hover { transform: translateY(-1px); }
+  .num-btn.active {
+    background: var(--accent);
+    color: var(--clay-light);
+    box-shadow: inset 2px 2px 5px rgba(0,0,0,.15);
   }
 
   /* ── Canvas ── */
   .canvas-wrap {
-    background: #fff;
-    border-radius: 18px;
-    box-shadow: 0 4px 20px rgba(0,0,0,.1);
-    padding: 12px;
-    margin-bottom: 14px;
+    background: var(--clay-light);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-out);
+    padding: 14px;
+    margin-bottom: 16px;
     display: flex;
     justify-content: center;
     max-width: 560px;
@@ -122,82 +181,162 @@
   }
   canvas {
     display: block;
-    border-radius: 10px;
+    border-radius: 14px;
   }
 
   /* ── Formula ── */
   .formula-box {
-    background: #fff3e0;
-    border: 3px solid #e65100;
-    border-radius: 18px;
-    padding: 14px 28px;
+    background: var(--accent-light);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-in);
+    padding: 18px 28px;
     text-align: center;
     max-width: 560px;
     width: 100%;
-    box-shadow: 0 4px 20px rgba(0,0,0,.1);
   }
   .formula-box .formula {
-    font-size: clamp(1.1rem, 3.5vw, 1.5rem);
-    color: #333;
+    font-size: clamp(1.1rem, 3.5vw, 1.4rem);
+    color: var(--text);
     font-weight: 600;
   }
   .formula-box .result {
     font-size: clamp(1.6rem, 5vw, 2.2rem);
-    color: #e65100;
+    color: var(--accent-dark);
     font-weight: 900;
     margin-top: 4px;
   }
-  .highlight { color: #1565c0; }
-  .highlight-g { color: #2e7d32; }
+  .highlight { color: #5a7bbf; }
+  .highlight-g { color: var(--green); }
 
   /* ── Challenge ── */
   .challenge-box {
-    margin-top: 14px;
-    background: #e8f5e9;
-    border: 3px solid #2e7d32;
-    border-radius: 18px;
-    padding: 14px 24px;
+    margin-top: 16px;
+    background: var(--green-light);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-in);
+    padding: 18px 24px;
     text-align: center;
     max-width: 560px;
     width: 100%;
-    box-shadow: 0 4px 20px rgba(0,0,0,.08);
   }
   .challenge-box .challenge-title {
     font-size: 1.15rem;
-    font-weight: 700;
-    color: #2e7d32;
+    font-weight: 800;
+    color: var(--green);
     margin-bottom: 6px;
   }
   .challenge-box .challenge-text {
-    font-size: clamp(1rem, 3vw, 1.3rem);
-    color: #333;
+    font-size: clamp(1rem, 3vw, 1.25rem);
+    color: var(--text);
     font-weight: 600;
   }
   .challenge-box .status {
     margin-top: 8px;
-    font-size: 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    padding: 6px 16px;
+    border-radius: 14px;
+    display: inline-block;
+    transition: all .35s ease;
+  }
+  .status-success {
+    background: var(--green-light);
+    color: var(--green);
+  }
+  .status-hint {
+    background: var(--accent-light);
+    color: var(--accent-dark);
   }
   .new-challenge-btn {
-    margin-top: 10px;
+    font-family: inherit;
+    margin-top: 12px;
     font-size: 1rem;
-    padding: 8px 22px;
-    border: 2px solid #2e7d32;
-    border-radius: 20px;
-    background: #fff;
-    color: #2e7d32;
     font-weight: 700;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 40px;
+    background: var(--clay-light);
+    color: var(--green);
+    box-shadow: var(--shadow-btn);
     cursor: pointer;
-    transition: all .2s;
+    transition: all .25s;
+    min-height: 44px;
   }
   .new-challenge-btn:hover {
-    background: #2e7d32;
-    color: #fff;
+    transform: translateY(-2px);
+  }
+  .new-challenge-btn:active {
+    box-shadow: var(--shadow-in);
+    transform: translateY(0);
+  }
+
+  /* ── Confetti ── */
+  .confetti-wrap {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+  }
+  .confetti-piece {
+    position: absolute;
+    width: 12px; height: 12px;
+    border-radius: 4px;
+    top: -8px; left: 50%;
+    opacity: 0;
+    pointer-events: none;
+    animation: confettiFall 1.6s ease-out both;
+  }
+  @keyframes confettiFall {
+    0%   { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); opacity: 1; }
+    100% { transform: translate3d(var(--drift-x, 0px), 150px, 0) rotate(720deg) scale(0.35); opacity: 0; }
+  }
+  .challenge-box.celebrate {
+    animation: celebratePulse .8s ease;
+  }
+  @keyframes celebratePulse {
+    0%   { transform: scale(1); }
+    35%  { transform: scale(1.06); box-shadow: 0 0 34px rgba(109,168,126,.5); }
+    65%  { transform: scale(1.03); box-shadow: 0 0 20px rgba(109,168,126,.3); }
+    100% { transform: scale(1); }
+  }
+
+  /* ── Onboarding hint ── */
+  .onboard-hint {
+    position: absolute;
+    bottom: -48px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--text);
+    color: var(--clay-light);
+    font-family: inherit;
+    font-size: .85rem;
+    font-weight: 700;
+    padding: 8px 18px;
+    border-radius: 14px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    animation: hintBounce 1.8s ease-in-out infinite;
+    z-index: 10;
+  }
+  .onboard-hint.show { opacity: 1; }
+  @keyframes hintBounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50%      { transform: translateX(-50%) translateY(-6px); }
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 480px) {
+    body { padding: 14px 10px; }
+    .controls { padding: 16px 18px; }
+  }
+  @media (max-width: 360px) {
+    .num-btn { width: 32px; height: 32px; font-size: .85rem; border-radius: 10px; }
   }
 </style>
 </head>
 <body>
 
-<h1>📐 Area Explorer</h1>
+<h1>Area Explorer</h1>
 
 <!-- Shape selector -->
 <div class="tabs">
@@ -205,23 +344,25 @@
   <button class="tab-btn" data-shape="square" onclick="setShape('square')">Square</button>
 </div>
 
-<!-- Sliders -->
+<!-- Sliders + number buttons -->
 <div class="controls">
   <div class="slider-group">
-    <label id="widthLabel">Width</label>
-    <input type="range" id="widthSlider" min="1" max="12" value="4" oninput="onSliderChange()">
+    <label id="widthLabel" for="widthSlider">Width</label>
+    <input type="range" id="widthSlider" min="1" max="12" value="4" aria-label="Width: 1 to 12" oninput="onSliderChange()">
     <span class="slider-val" id="widthVal">4</span>
+    <div class="num-btns" id="widthBtns"></div>
   </div>
   <div class="slider-group" id="heightGroup">
-    <label>Height</label>
-    <input type="range" id="heightSlider" min="1" max="10" value="3" oninput="onSliderChange()">
+    <label for="heightSlider">Height</label>
+    <input type="range" id="heightSlider" min="1" max="10" value="3" aria-label="Height: 1 to 10" oninput="onSliderChange()">
     <span class="slider-val" id="heightVal">3</span>
+    <div class="num-btns" id="heightBtns"></div>
   </div>
 </div>
 
 <!-- Visualization canvas -->
 <div class="canvas-wrap">
-  <canvas id="areaCanvas" width="520" height="400"></canvas>
+  <canvas id="areaCanvas" width="520" height="400" role="img" aria-label="Area grid showing unit squares"></canvas>
 </div>
 
 <!-- Formula display -->
@@ -232,9 +373,9 @@
 
 <!-- Challenge mode -->
 <div class="challenge-box">
-  <div class="challenge-title">🎯 Challenge</div>
+  <div class="challenge-title">Challenge</div>
   <div class="challenge-text" id="challengeText"></div>
-  <div class="status" id="challengeStatus"></div>
+  <div class="status" id="challengeStatus" role="status" aria-live="polite"></div>
   <button class="new-challenge-btn" onclick="newChallenge()">New Challenge</button>
 </div>
 
@@ -251,19 +392,66 @@ const resultLine = document.getElementById('resultLine');
 const challengeText = document.getElementById('challengeText');
 const challengeStatus = document.getElementById('challengeStatus');
 const widthLabel = document.getElementById('widthLabel');
+const widthBtns = document.getElementById('widthBtns');
+const heightBtns = document.getElementById('heightBtns');
+const challengeBox = document.querySelector('.challenge-box');
 
 let currentShape = 'rectangle';
 let targetArea = 0;
 let animSquares = [];
-let animFrame = 0;
 let animId = null;
+let animStartTime = 0;
+let lastChallengeCorrect = false;
 
-/* ── colours for unit squares ── */
+/* ── Sound FX (Web Audio API) ── */
+const SFX = (() => {
+  let ctx;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function getCtx() { if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)(); return ctx; }
+  function prime() {
+    if (reducedMotion) return;
+    try {
+      const c = getCtx();
+      if (c.state === 'suspended') c.resume();
+    } catch(e) {}
+  }
+  function play(freq, freq2, dur, type = 'sine', vol = 0.12) {
+    if (reducedMotion) return;
+    try {
+      const c = getCtx();
+      if (c.state === 'suspended') {
+        c.resume();
+      }
+      const o = c.createOscillator(), g = c.createGain();
+      o.type = type; o.frequency.setValueAtTime(freq, c.currentTime);
+      if (freq2) o.frequency.linearRampToValueAtTime(freq2, c.currentTime + dur);
+      g.gain.setValueAtTime(vol, c.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + dur);
+      o.connect(g); g.connect(c.destination);
+      o.start(); o.stop(c.currentTime + dur);
+    } catch(e) {}
+  }
+  return {
+    prime,
+    success() { play(523, 784, 0.35, 'sine', 0.25); },
+    hint()    { play(330, 280, 0.15, 'triangle', 0.18); },
+    tick()    { play(880, null, 0.05, 'sine', 0.13); }
+  };
+})();
+
+['pointerdown', 'touchstart', 'keydown'].forEach(eventName => {
+  window.addEventListener(eventName, () => SFX.prime(), { passive: true, once: false });
+});
+
+/* ── warm palette ── */
 const palette = [
-  '#FF7043','#FF9800','#FFC107','#8BC34A','#4CAF50',
-  '#00BCD4','#2196F3','#7C4DFF','#E91E63','#F06292',
-  '#26A69A','#FFEE58'
+  '#d4856a','#e0a68a','#c9a87c','#6da87e','#87b891',
+  '#7b7fc7','#9b8ec4','#d49a7a','#b8a78e','#a3c4a9',
+  '#8a9bbd','#cdb892'
 ];
+
+/* ── easing: decelerate (ease-out quart) ── */
+function easeOutQuart(t) { return 1 - Math.pow(1 - t, 4); }
 
 function setShape(shape) {
   currentShape = shape;
@@ -275,10 +463,12 @@ function setShape(shape) {
     widthLabel.textContent = 'Side Length';
     widthSlider.max = 10;
     if (parseInt(widthSlider.value) > 10) widthSlider.value = 10;
+    renderNumBtns(widthBtns, 1, 10, widthSlider);
   } else {
     heightGroup.style.display = '';
     widthLabel.textContent = 'Width';
     widthSlider.max = 12;
+    renderNumBtns(widthBtns, 1, 12, widthSlider);
   }
   onSliderChange();
 }
@@ -286,10 +476,17 @@ function setShape(shape) {
 function getW() { return parseInt(widthSlider.value); }
 function getH() { return currentShape === 'square' ? getW() : parseInt(heightSlider.value); }
 
+let initDone = false;
+
 function onSliderChange() {
+  if (initDone) dismissHint();
+  if (initDone) SFX.tick();
   const w = getW(), h = getH();
   widthVal.textContent = w;
   heightVal.textContent = currentShape === 'square' ? w : h;
+  highlightNumBtns(widthBtns, w);
+  highlightNumBtns(heightBtns, currentShape === 'square' ? w : h);
+  canvas.setAttribute('aria-label', `Area grid showing ${w} by ${h} = ${w * h} unit squares`);
   buildAnimList(w, h);
   checkChallenge(w, h);
 }
@@ -297,33 +494,42 @@ function onSliderChange() {
 function buildAnimList(w, h) {
   animSquares = [];
   let idx = 0;
+  /* row-by-row fill: stagger delay so each row starts after the previous */
+  const staggerPerSquare = 30;   // ms between each square within a row
+  const rowGap = 120;            // extra ms delay between rows
   for (let row = 0; row < h; row++) {
     for (let col = 0; col < w; col++) {
-      animSquares.push({ col, row, color: palette[idx % palette.length], scale: 0 });
+      const delay = row * (w * staggerPerSquare + rowGap) + col * staggerPerSquare;
+      animSquares.push({
+        col, row,
+        color: palette[idx % palette.length],
+        delay,
+        progress: 0   // 0→1 over duration
+      });
       idx++;
     }
   }
-  animFrame = 0;
+  animStartTime = performance.now();
   if (animId) cancelAnimationFrame(animId);
   animate(w, h);
 }
 
+const SQUARE_DURATION = 280; // ms for one square to fully appear
+
 function animate(w, h) {
-  const speed = 3;          // squares revealed per frame
+  const now = performance.now();
+  const elapsed = now - animStartTime;
   let allDone = true;
-  for (let i = 0; i < animSquares.length; i++) {
-    if (i <= animFrame) {
-      if (animSquares[i].scale < 1) {
-        animSquares[i].scale = Math.min(1, animSquares[i].scale + 0.15);
-        allDone = false;
-      }
-    } else {
-      allDone = false;
-    }
+
+  for (const sq of animSquares) {
+    const t = Math.max(0, elapsed - sq.delay);
+    sq.progress = Math.min(1, t / SQUARE_DURATION);
+    if (sq.progress < 1) allDone = false;
   }
-  animFrame += speed;
+
   draw(w, h);
-  updateFormula(w, h);
+  updateFormula(w, h, elapsed);
+
   if (!allDone) {
     animId = requestAnimationFrame(() => animate(w, h));
   }
@@ -340,8 +546,8 @@ function draw(w, h) {
   const ox = (cw - totalW) / 2, oy = (ch - totalH) / 2;
 
   // grid background
-  ctx.fillStyle = '#fafafa';
-  ctx.strokeStyle = '#e0e0e0';
+  ctx.fillStyle = '#faf7f2';
+  ctx.strokeStyle = '#e4ded5';
   ctx.lineWidth = 1;
   ctx.fillRect(ox, oy, totalW, totalH);
   for (let c = 0; c <= w; c++) {
@@ -351,40 +557,50 @@ function draw(w, h) {
     ctx.beginPath(); ctx.moveTo(ox, oy + r * cell); ctx.lineTo(ox + totalW, oy + r * cell); ctx.stroke();
   }
 
-  // unit squares
+  // unit squares with eased scale + opacity
+  let shownCount = 0;
   for (const sq of animSquares) {
-    if (sq.scale <= 0) continue;
+    if (sq.progress <= 0) continue;
+    const ease = easeOutQuart(sq.progress);
     const x = ox + sq.col * cell;
     const y = oy + sq.row * cell;
-    const s = sq.scale;
+    const s = ease;
     const pad = cell * (1 - s) / 2;
     ctx.fillStyle = sq.color;
-    ctx.globalAlpha = s;
-    roundRect(ctx, x + pad + 1, y + pad + 1, cell * s - 2, cell * s - 2, 4);
+    ctx.globalAlpha = ease;
+    roundRect(ctx, x + pad + 1, y + pad + 1, cell * s - 2, cell * s - 2, 6);
     ctx.fill();
+
+    // subtle inner highlight on each square
+    if (ease > 0.5) {
+      ctx.globalAlpha = (ease - 0.5) * 0.35;
+      ctx.fillStyle = '#fff';
+      const hSize = cell * s * 0.3;
+      roundRect(ctx, x + pad + 3, y + pad + 3, hSize, hSize, 3);
+      ctx.fill();
+    }
     ctx.globalAlpha = 1;
+
+    if (sq.progress > 0.3) shownCount++;
   }
 
   // dimension labels
-  ctx.fillStyle = '#1565c0';
-  ctx.font = `bold ${Math.min(20, cell * 0.45)}px 'Segoe UI', sans-serif`;
+  ctx.fillStyle = '#5a7bbf';
+  ctx.font = `bold ${Math.min(20, cell * 0.45)}px 'Nunito', sans-serif`;
   ctx.textAlign = 'center';
-  // width label below
-  ctx.fillText(w + (currentShape === 'square' ? '' : ''), ox + totalW / 2, oy + totalH + 22);
-  // height label left
+  ctx.fillText(w + '', ox + totalW / 2, oy + totalH + 22);
   ctx.save();
   ctx.translate(ox - 14, oy + totalH / 2);
   ctx.rotate(-Math.PI / 2);
-  ctx.fillStyle = '#2e7d32';
+  ctx.fillStyle = '#6da87e';
   ctx.fillText(h + '', 0, 0);
   ctx.restore();
 
-  // count shown squares
-  const shown = animSquares.filter(s => s.scale > 0.5).length;
-  ctx.fillStyle = '#e65100';
-  ctx.font = `bold ${Math.min(18, cell * 0.38)}px 'Segoe UI', sans-serif`;
+  // running counter
+  ctx.fillStyle = '#b8694f';
+  ctx.font = `bold ${Math.min(18, cell * 0.38)}px 'Nunito', sans-serif`;
   ctx.textAlign = 'right';
-  ctx.fillText(shown + ' unit squares', cw - 14, ch - 8);
+  ctx.fillText(shownCount + ' / ' + animSquares.length + ' unit squares', cw - 14, ch - 8);
 }
 
 function roundRect(ctx, x, y, w, h, r) {
@@ -401,14 +617,21 @@ function roundRect(ctx, x, y, w, h, r) {
   ctx.closePath();
 }
 
-function updateFormula(w, h) {
-  const area = w * h;
+function updateFormula(w, h, elapsed) {
+  const total = w * h;
+  /* animate the number counting up */
+  const lastSquareDelay = animSquares.length > 0
+    ? animSquares[animSquares.length - 1].delay + SQUARE_DURATION
+    : 0;
+  const countProgress = lastSquareDelay > 0 ? Math.min(1, elapsed / lastSquareDelay) : 1;
+  const displayCount = Math.round(easeOutQuart(countProgress) * total);
+
   if (currentShape === 'square') {
     formulaLine.innerHTML = `Area = <span class="highlight">${w}</span> × <span class="highlight">${w}</span>`;
   } else {
     formulaLine.innerHTML = `Area = <span class="highlight">${w}</span> × <span class="highlight-g">${h}</span>`;
   }
-  resultLine.textContent = `= ${area} square units`;
+  resultLine.textContent = `= ${displayCount} square units`;
 }
 
 /* ── Challenge Mode ── */
@@ -417,6 +640,8 @@ function newChallenge() {
   targetArea = areas[Math.floor(Math.random() * areas.length)];
   challengeText.textContent = `Can you make a shape with area = ${targetArea}?`;
   challengeStatus.textContent = '';
+  challengeStatus.className = 'status';
+  lastChallengeCorrect = false;
   checkChallenge(getW(), getH());
 }
 
@@ -424,10 +649,43 @@ function checkChallenge(w, h) {
   if (!targetArea) return;
   const area = w * h;
   if (area === targetArea) {
-    challengeStatus.textContent = '🎉 You got it!';
+    challengeStatus.textContent = 'Well done!';
+    challengeStatus.className = 'status status-success';
+    if (!lastChallengeCorrect) { SFX.success(); spawnConfetti(); celebratePulse(); }
+    lastChallengeCorrect = true;
   } else {
-    challengeStatus.textContent = area < targetArea ? '⬆️ Need more!' : '⬇️ Too much!';
+    if (lastChallengeCorrect || challengeStatus.textContent === '') { /* only beep on new wrong */ }
+    else { SFX.hint(); }
+    challengeStatus.textContent = area < targetArea ? 'Need more!' : 'Too much!';
+    challengeStatus.className = 'status status-hint';
+    lastChallengeCorrect = false;
   }
+}
+
+/* ── Confetti ── */
+const confettiColors = ['#ff6b6b','#ff9f43','#ffd32a','#26de81','#45aaf2','#a55eea','#fd79a8','#00d2d3'];
+function spawnConfetti() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  for (let i = 0; i < 32; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.style.background = confettiColors[i % confettiColors.length];
+    el.style.left = (20 + Math.random() * 60) + '%';
+    el.style.setProperty('--drift-x', `${-70 + Math.random() * 140}px`);
+    el.style.animationDelay = (Math.random() * 0.3) + 's';
+    el.style.animationDuration = (1.2 + Math.random() * 0.8) + 's';
+    challengeBox.style.position = 'relative';
+    challengeBox.style.overflow = 'visible';
+    challengeBox.appendChild(el);
+    setTimeout(() => el.remove(), 2500);
+  }
+}
+function celebratePulse() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  challengeBox.classList.remove('celebrate');
+  void challengeBox.offsetWidth;
+  challengeBox.classList.add('celebrate');
+  setTimeout(() => challengeBox.classList.remove('celebrate'), 600);
 }
 
 /* ── Responsive canvas ── */
@@ -441,8 +699,47 @@ function resizeCanvas() {
 window.addEventListener('resize', resizeCanvas);
 
 /* ── Init ── */
+function renderNumBtns(container, min, max, slider) {
+  const label = slider === widthSlider ? (currentShape === 'square' ? 'side length' : 'width') : 'height';
+  container.innerHTML = '';
+  for (let i = min; i <= max; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'num-btn';
+    btn.textContent = i;
+    btn.setAttribute('aria-label', `Set ${label} to ${i}`);
+    btn.addEventListener('click', () => {
+      slider.value = i;
+      onSliderChange();
+    });
+    container.appendChild(btn);
+  }
+}
+function highlightNumBtns(container, val) {
+  container.querySelectorAll('.num-btn').forEach(b => {
+    b.classList.toggle('active', parseInt(b.textContent) === val);
+  });
+}
+
+/* ── Onboarding hint ── */
+let hintEl = null;
+function dismissHint() {
+  if (hintEl) { hintEl.remove(); hintEl = null; }
+}
+function showHint() {
+  const group = document.querySelector('.slider-group');
+  hintEl = document.createElement('div');
+  hintEl.className = 'onboard-hint';
+  hintEl.textContent = 'Drag the slider or tap a number!';
+  group.appendChild(hintEl);
+  requestAnimationFrame(() => hintEl.classList.add('show'));
+  setTimeout(dismissHint, 5000);
+}
+renderNumBtns(widthBtns, 1, 12, widthSlider);
+renderNumBtns(heightBtns, 1, 10, heightSlider);
 resizeCanvas();
 newChallenge();
+initDone = true;
+showHint();
 </script>
 </body>
 </html>

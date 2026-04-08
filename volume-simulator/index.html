@@ -4,61 +4,87 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Volume Explorer – Learn About Volume!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
+  :root {
+    --bg: #f0ebe3;
+    --clay-light: #faf7f2;
+    --clay-mid: #ece6db;
+    --shadow-out: 8px 8px 20px rgba(0,0,0,.10), -6px -6px 16px rgba(255,255,255,.7);
+    --shadow-in: inset 4px 4px 10px rgba(0,0,0,.06), inset -4px -4px 10px rgba(255,255,255,.6);
+    --shadow-btn: 4px 4px 12px rgba(0,0,0,.12), -3px -3px 8px rgba(255,255,255,.6);
+    --accent: #7b7fc7;
+    --accent-dark: #5c5fa8;
+    --accent-light: #dddcf0;
+    --green: #6da87e;
+    --green-light: #e2efe6;
+    --text: #3d3a36;
+    --text-soft: #7a756d;
+    --radius: 24px;
+  }
+
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    font-family: 'Segoe UI', 'Comic Sans MS', Arial, sans-serif;
-    background: linear-gradient(135deg, #d1c4e9 0%, #b3e5fc 100%);
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 12px;
+    padding: 20px 16px;
     overflow-x: hidden;
   }
 
   h1 {
-    font-size: clamp(1.3rem, 4vw, 1.9rem);
-    color: #4527a0;
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-weight: 800;
+    color: var(--accent-dark);
     text-align: center;
-    margin-bottom: 6px;
-    text-shadow: 1px 1px 0 #fff;
+    margin-bottom: 14px;
+    letter-spacing: -.02em;
   }
 
   /* ── Shape Tabs ── */
   .tabs {
     display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
+    gap: 12px;
+    margin-bottom: 16px;
   }
   .tab-btn {
-    font-size: clamp(0.95rem, 3vw, 1.2rem);
-    padding: 9px 24px;
-    border: 3px solid #4527a0;
-    border-radius: 30px;
-    background: #fff;
-    color: #4527a0;
+    font-family: inherit;
+    font-size: clamp(0.95rem, 3vw, 1.15rem);
     font-weight: 700;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 40px;
+    background: var(--clay-light);
+    color: var(--text-soft);
+    box-shadow: var(--shadow-btn);
     cursor: pointer;
-    transition: all .2s;
+    transition: all .25s;
+    min-height: 44px;
   }
-  .tab-btn.active, .tab-btn:hover {
-    background: #4527a0;
-    color: #fff;
+  .tab-btn:hover { transform: translateY(-2px); }
+  .tab-btn.active {
+    background: var(--text);
+    color: var(--clay-light);
+    box-shadow: inset 3px 3px 8px rgba(0,0,0,.2), 2px 2px 8px rgba(0,0,0,.1);
   }
 
   /* ── Controls ── */
   .controls {
-    background: #fff;
-    border-radius: 18px;
-    padding: 14px 20px;
-    box-shadow: 0 4px 20px rgba(0,0,0,.1);
+    background: var(--clay-light);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-out);
+    padding: 20px 24px;
     display: flex;
     flex-wrap: wrap;
-    gap: 14px;
+    gap: 16px;
     justify-content: center;
-    margin-bottom: 10px;
+    margin-bottom: 16px;
     max-width: 600px;
     width: 100%;
   }
@@ -68,67 +94,102 @@
     align-items: center;
     min-width: 110px;
     flex: 1;
+    position: relative;
   }
   .slider-group label {
     font-size: 1rem;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 2px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
   }
   .slider-group input[type=range] {
     -webkit-appearance: none;
     width: 100%;
-    height: 12px;
-    border-radius: 6px;
-    background: linear-gradient(90deg, #b39ddb, #4527a0);
+    height: 14px;
+    border-radius: 7px;
+    background: var(--clay-mid);
+    box-shadow: var(--shadow-in);
     outline: none;
     cursor: pointer;
   }
   .slider-group input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 28px; height: 28px;
+    width: 44px; height: 44px;
     border-radius: 50%;
-    background: #4527a0;
-    border: 3px solid #fff;
-    box-shadow: 0 2px 6px rgba(0,0,0,.3);
+    background: var(--accent);
+    border: 4px solid var(--clay-light);
+    box-shadow: var(--shadow-btn);
     cursor: grab;
   }
   .slider-group input[type=range]::-moz-range-thumb {
-    width: 28px; height: 28px;
+    width: 44px; height: 44px;
     border-radius: 50%;
-    background: #4527a0;
-    border: 3px solid #fff;
-    box-shadow: 0 2px 6px rgba(0,0,0,.3);
+    background: var(--accent);
+    border: 4px solid var(--clay-light);
+    box-shadow: var(--shadow-btn);
     cursor: grab;
   }
   .slider-val {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     font-weight: 800;
-    color: #4527a0;
-    margin-top: 1px;
+    color: var(--accent-dark);
+    margin-top: 4px;
+  }
+
+  /* ── Number buttons ── */
+  .num-btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+    margin-top: 8px;
+  }
+  .num-btn {
+    font-family: inherit;
+    font-size: .95rem;
+    font-weight: 700;
+    width: 38px; height: 38px;
+    border: none;
+    border-radius: 12px;
+    background: var(--clay-mid);
+    color: var(--text-soft);
+    box-shadow: 2px 2px 6px rgba(0,0,0,.08), -2px -2px 4px rgba(255,255,255,.5);
+    cursor: pointer;
+    transition: all .2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .num-btn:hover { transform: translateY(-1px); }
+  .num-btn.active {
+    background: var(--accent);
+    color: var(--clay-light);
+    box-shadow: inset 2px 2px 5px rgba(0,0,0,.15);
   }
 
   /* ── 3D Viewport ── */
   .viewport {
-    background: #fff;
-    border-radius: 18px;
-    box-shadow: 0 4px 20px rgba(0,0,0,.1);
-    margin-bottom: 10px;
+    background: var(--clay-light);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-out);
+    margin-bottom: 16px;
     max-width: 600px;
     width: 100%;
     position: relative;
     overflow: hidden;
   }
-  .viewport canvas { display: block; width: 100% !important; height: auto !important; border-radius: 18px; }
+  .viewport canvas { display: block; width: 100% !important; height: auto !important; border-radius: var(--radius); }
   .drag-hint {
     position: absolute;
-    bottom: 8px; left: 50%;
+    bottom: 10px; left: 50%;
     transform: translateX(-50%);
-    background: rgba(0,0,0,.45);
-    color: #fff;
-    font-size: .8rem;
-    padding: 4px 14px;
-    border-radius: 12px;
+    background: rgba(61,58,54,.55);
+    color: var(--clay-light);
+    font-family: inherit;
+    font-size: .85rem;
+    font-weight: 600;
+    padding: 6px 16px;
+    border-radius: 14px;
     pointer-events: none;
     opacity: 1;
     transition: opacity 1s;
@@ -136,83 +197,151 @@
 
   /* ── Formula ── */
   .formula-box {
-    background: #ede7f6;
-    border: 3px solid #4527a0;
-    border-radius: 18px;
-    padding: 12px 24px;
+    background: var(--accent-light);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-in);
+    padding: 18px 24px;
     text-align: center;
     max-width: 600px;
     width: 100%;
-    box-shadow: 0 4px 20px rgba(0,0,0,.08);
   }
   .formula-box .formula {
     font-size: clamp(1rem, 3vw, 1.35rem);
-    color: #333;
+    color: var(--text);
     font-weight: 600;
   }
   .formula-box .result {
     font-size: clamp(1.4rem, 4.5vw, 2rem);
-    color: #4527a0;
+    color: var(--accent-dark);
     font-weight: 900;
-    margin-top: 2px;
+    margin-top: 4px;
   }
-  .hl-l { color: #d32f2f; }
-  .hl-w { color: #1565c0; }
-  .hl-h { color: #2e7d32; }
+  .hl-l { color: #c47a62; }
+  .hl-w { color: #5a7bbf; }
+  .hl-h { color: #6da87e; }
 
   /* ── Challenge ── */
   .challenge-box {
-    margin-top: 10px;
-    background: #fff8e1;
-    border: 3px solid #f9a825;
-    border-radius: 18px;
-    padding: 12px 20px;
+    margin-top: 16px;
+    background: var(--green-light);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-in);
+    padding: 18px 24px;
     text-align: center;
     max-width: 600px;
     width: 100%;
-    box-shadow: 0 4px 20px rgba(0,0,0,.06);
   }
-  .challenge-box .challenge-title { font-size: 1.1rem; font-weight: 700; color: #f57f17; margin-bottom: 4px; }
-  .challenge-box .challenge-text { font-size: clamp(.95rem, 3vw, 1.2rem); color: #333; font-weight: 600; }
-  .challenge-box .status { margin-top: 6px; font-size: 1.4rem; }
-  .new-challenge-btn {
-    margin-top: 8px;
-    font-size: .95rem;
-    padding: 7px 20px;
-    border: 2px solid #f9a825;
-    border-radius: 20px;
-    background: #fff;
-    color: #f57f17;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all .2s;
+  .challenge-box .challenge-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--green);
+    margin-bottom: 6px;
   }
-  .new-challenge-btn:hover { background: #f9a825; color: #fff; }
-
-  /* ── Build-layer toggle ── */
-  .toggle-row {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin-bottom: 10px;
-  }
-  .toggle-btn {
-    font-size: .9rem;
-    padding: 7px 18px;
-    border: 2px solid #4527a0;
-    border-radius: 18px;
-    background: #fff;
-    color: #4527a0;
+  .challenge-box .challenge-text {
+    font-size: clamp(.95rem, 3vw, 1.2rem);
+    color: var(--text);
     font-weight: 600;
-    cursor: pointer;
-    transition: all .2s;
   }
-  .toggle-btn.active, .toggle-btn:hover { background: #4527a0; color: #fff; }
+  .challenge-box .status { margin-top: 8px; font-size: 1.1rem; font-weight: 700; padding: 6px 16px; border-radius: 14px; display: inline-block; transition: all .35s ease; }
+  .status-success { background: var(--green-light); color: var(--green); }
+  .status-hint { background: var(--accent-light); color: var(--accent-dark); }
+  .new-challenge-btn {
+    font-family: inherit;
+    margin-top: 12px;
+    font-size: .95rem;
+    font-weight: 700;
+    padding: 10px 22px;
+    border: none;
+    border-radius: 40px;
+    background: var(--clay-light);
+    color: var(--green);
+    box-shadow: var(--shadow-btn);
+    cursor: pointer;
+    transition: all .25s;
+    min-height: 44px;
+  }
+  .new-challenge-btn:hover { transform: translateY(-2px); }
+  .new-challenge-btn:active {
+    box-shadow: var(--shadow-in);
+    transform: translateY(0);
+  }
+
+  /* ── Confetti ── */
+  .confetti-wrap {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+  }
+  .confetti-piece {
+    position: absolute;
+    width: 12px; height: 12px;
+    border-radius: 4px;
+    top: -8px; left: 50%;
+    opacity: 0;
+    pointer-events: none;
+    animation: confettiFall 1.6s ease-out both;
+  }
+  @keyframes confettiFall {
+    0%   { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); opacity: 1; }
+    100% { transform: translate3d(var(--drift-x, 0px), 150px, 0) rotate(720deg) scale(0.35); opacity: 0; }
+  }
+  .challenge-box.celebrate {
+    animation: celebratePulse .8s ease;
+  }
+  @keyframes celebratePulse {
+    0%   { transform: scale(1); }
+    35%  { transform: scale(1.06); box-shadow: 0 0 34px rgba(109,168,126,.5); }
+    65%  { transform: scale(1.03); box-shadow: 0 0 20px rgba(109,168,126,.3); }
+    100% { transform: scale(1); }
+  }
+
+  /* ── Onboarding hint ── */
+  .onboard-hint {
+    position: absolute;
+    bottom: -48px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--text);
+    color: var(--clay-light);
+    font-family: inherit;
+    font-size: .85rem;
+    font-weight: 700;
+    padding: 8px 18px;
+    border-radius: 14px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    animation: hintBounce 1.8s ease-in-out infinite;
+    z-index: 10;
+  }
+  .onboard-hint.show { opacity: 1; }
+  @keyframes hintBounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50%      { transform: translateX(-50%) translateY(-6px); }
+  }
+
+  /* ── Drag hint enhanced ── */
+  .drag-hint.pulse {
+    animation: dragPulse 2s ease-in-out infinite;
+  }
+  @keyframes dragPulse {
+    0%, 100% { opacity: .7; transform: translateX(-50%) scale(1); }
+    50%      { opacity: 1; transform: translateX(-50%) scale(1.05); }
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 480px) {
+    body { padding: 14px 10px; }
+    .controls { padding: 16px 16px; }
+  }
+  @media (max-width: 360px) {
+    .num-btn { width: 32px; height: 32px; font-size: .85rem; border-radius: 10px; }
+  }
 </style>
 </head>
 <body>
 
-<h1>📦 Volume Explorer</h1>
+<h1>Volume Explorer</h1>
 
 <div class="tabs">
   <button class="tab-btn active" data-shape="cuboid" onclick="setShape('cuboid')">Cuboid</button>
@@ -221,29 +350,27 @@
 
 <div class="controls">
   <div class="slider-group">
-    <label id="lenLabel">Length</label>
-    <input type="range" id="lenSlider" min="1" max="8" value="4" oninput="onInput()">
+    <label id="lenLabel" for="lenSlider">Length</label>
+    <input type="range" id="lenSlider" min="1" max="8" value="4" aria-label="Length: 1 to 8" oninput="onInput()">
     <span class="slider-val" id="lenVal">4</span>
+    <div class="num-btns" id="lenBtns"></div>
   </div>
   <div class="slider-group" id="wGroup">
-    <label>Width</label>
-    <input type="range" id="wSlider" min="1" max="8" value="3" oninput="onInput()">
+    <label for="wSlider">Width</label>
+    <input type="range" id="wSlider" min="1" max="8" value="3" aria-label="Width: 1 to 8" oninput="onInput()">
     <span class="slider-val" id="wVal">3</span>
+    <div class="num-btns" id="wBtns"></div>
   </div>
   <div class="slider-group" id="hGroup">
-    <label>Height</label>
-    <input type="range" id="hSlider" min="1" max="8" value="2" oninput="onInput()">
+    <label for="hSlider">Height</label>
+    <input type="range" id="hSlider" min="1" max="8" value="2" aria-label="Height: 1 to 8" oninput="onInput()">
     <span class="slider-val" id="hVal">2</span>
+    <div class="num-btns" id="hBtns"></div>
   </div>
-</div>
-
-<div class="toggle-row">
-  <button class="toggle-btn active" id="btnSolid" onclick="setView('solid')">Solid</button>
-  <button class="toggle-btn" id="btnBuild" onclick="setView('build')">Build Layer by Layer</button>
 </div>
 
 <div class="viewport" id="viewport">
-  <div class="drag-hint" id="dragHint">🖱️ Drag to rotate</div>
+  <div class="drag-hint" id="dragHint">Drag to rotate</div>
 </div>
 
 <div class="formula-box">
@@ -252,9 +379,9 @@
 </div>
 
 <div class="challenge-box">
-  <div class="challenge-title">🎯 Challenge</div>
+  <div class="challenge-title">Challenge</div>
   <div class="challenge-text" id="challengeText"></div>
-  <div class="status" id="challengeStatus"></div>
+  <div class="status" id="challengeStatus" role="status" aria-live="polite"></div>
   <button class="new-challenge-btn" onclick="newChallenge()">New Challenge</button>
 </div>
 
@@ -282,6 +409,9 @@ const hVal      = document.getElementById('hVal');
 const wGroup    = document.getElementById('wGroup');
 const hGroup    = document.getElementById('hGroup');
 const lenLabel  = document.getElementById('lenLabel');
+const lenBtns   = document.getElementById('lenBtns');
+const wBtns     = document.getElementById('wBtns');
+const hBtns     = document.getElementById('hBtns');
 const formulaLine = document.getElementById('formulaLine');
 const resultLine  = document.getElementById('resultLine');
 const challengeText   = document.getElementById('challengeText');
@@ -290,21 +420,71 @@ const viewportEl      = document.getElementById('viewport');
 const dragHint        = document.getElementById('dragHint');
 
 let currentShape = 'cuboid';
-let viewMode = 'solid'; // 'solid' | 'build'
 let targetVol = 0;
 let cubeGroup = null;
-let buildProgress = 0;
-let buildTimer = null;
+let animStartTime = 0;
+let animRunning = false;
+let lastChallengeCorrect = false;
+const challengeBox = document.querySelector('.challenge-box');
 
-/* ── Colours per layer ── */
+/* ── Sound FX (Web Audio API) ── */
+const SFX = (() => {
+  let ctx;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function getCtx() { if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)(); return ctx; }
+  function prime() {
+    if (reducedMotion) return;
+    try {
+      const c = getCtx();
+      if (c.state === 'suspended') c.resume();
+    } catch(e) {}
+  }
+  function play(freq, freq2, dur, type = 'sine', vol = 0.12) {
+    if (reducedMotion) return;
+    try {
+      const c = getCtx();
+      if (c.state === 'suspended') {
+        c.resume();
+      }
+      const o = c.createOscillator(), g = c.createGain();
+      o.type = type; o.frequency.setValueAtTime(freq, c.currentTime);
+      if (freq2) o.frequency.linearRampToValueAtTime(freq2, c.currentTime + dur);
+      g.gain.setValueAtTime(vol, c.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + dur);
+      o.connect(g); g.connect(c.destination);
+      o.start(); o.stop(c.currentTime + dur);
+    } catch(e) {}
+  }
+  return {
+    prime,
+    success() { play(523, 784, 0.35, 'sine', 0.25); },
+    hint()    { play(330, 280, 0.15, 'triangle', 0.18); },
+    tick()    { play(880, null, 0.05, 'sine', 0.13); }
+  };
+})();
+
+['pointerdown', 'touchstart', 'keydown'].forEach(eventName => {
+  window.addEventListener(eventName, () => SFX.prime(), { passive: true, once: false });
+});
+
+/* ── Colours per layer — bright child-friendly palette ── */
 const layerColors = [
-  0xFF7043, 0xFFA726, 0xFFEE58, 0x66BB6A,
-  0x26C6DA, 0x42A5F5, 0x7E57C2, 0xEC407A
+  0xff6b6b, // coral red
+  0xff9f43, // orange
+  0xffd32a, // sunny yellow
+  0x26de81, // fresh green
+  0x45aaf2, // sky blue
+  0xa55eea, // purple
+  0xfd79a8, // pink
+  0x00d2d3, // teal
 ];
+
+/* ── easing ── */
+function easeOutQuart(t) { return 1 - Math.pow(1 - t, 4); }
 
 /* ── Three.js Setup ── */
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xf5f5f5);
+scene.background = new THREE.Color(0xece6db);
 
 const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
 camera.position.set(8, 8, 14);
@@ -312,6 +492,8 @@ camera.position.set(8, 8, 14);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 viewportEl.insertBefore(renderer.domElement, dragHint);
+renderer.domElement.setAttribute('role', 'img');
+renderer.domElement.setAttribute('aria-label', 'Volume model showing unit cubes');
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
@@ -322,16 +504,28 @@ controls.maxDistance = 40;
 controls.autoRotate = true;
 controls.autoRotateSpeed = 1.5;
 
-// Stop auto-rotate on interaction
+let dragHintHidden = false;
+let idleTimer = null;
+function resetIdleTimer() {
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(() => {
+    if (dragHintHidden) {
+      dragHint.style.opacity = '1';
+      dragHint.classList.add('pulse');
+    }
+  }, 15000);
+}
 controls.addEventListener('start', () => {
   controls.autoRotate = false;
   dragHint.style.opacity = '0';
+  dragHint.classList.remove('pulse');
+  dragHintHidden = true;
+  resetIdleTimer();
 });
 
-// Lights
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.65);
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
 scene.add(ambientLight);
-const dirLight = new THREE.DirectionalLight(0xffffff, 0.7);
+const dirLight = new THREE.DirectionalLight(0xffffff, 0.85);
 dirLight.position.set(10, 15, 10);
 scene.add(dirLight);
 
@@ -353,7 +547,12 @@ function getH() { return currentShape === 'cube' ? getL() : parseInt(hSlider.val
 
 const gap = 0.06;
 const cubeSize = 0.92;
-const edgeMat = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 1 });
+const edgeMat = new THREE.LineBasicMaterial({ color: 0x3d3a36, linewidth: 1 });
+
+/* Animation timing constants */
+const CUBE_DURATION = 250;       // ms per cube to fully scale in
+const STAGGER_WITHIN_LAYER = 25; // ms between cubes in same layer
+const LAYER_GAP = 300;           // extra ms gap between layers
 
 function buildScene() {
   if (cubeGroup) { scene.remove(cubeGroup); }
@@ -363,7 +562,9 @@ function buildScene() {
   const offX = -(l - 1) / 2;
   const offY = -(h - 1) / 2;
   const offZ = -(w - 1) / 2;
+  const cubesPerLayer = l * w;
 
+  let cubeIndex = 0;
   for (let y = 0; y < h; y++) {
     for (let z = 0; z < w; z++) {
       for (let x = 0; x < l; x++) {
@@ -371,24 +572,39 @@ function buildScene() {
         const mat = new THREE.MeshPhongMaterial({
           color: layerColors[colorIdx],
           transparent: true,
-          opacity: 1,
-          shininess: 40
+          opacity: 0,
+          shininess: 90
         });
         const geom = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
         const mesh = new THREE.Mesh(geom, mat);
-        mesh.position.set(
+
+        const targetPos = new THREE.Vector3(
           offX + x * (1 + gap),
           offY + y * (1 + gap),
           offZ + z * (1 + gap)
         );
-        mesh.userData.layer = y;
+        mesh.position.copy(targetPos);
+        mesh.scale.set(0, 0, 0);
 
-        // edges
+        // compute stagger delay — layer-by-layer build
+        const indexInLayer = cubeIndex - y * cubesPerLayer;
+        const delay = y * (cubesPerLayer * STAGGER_WITHIN_LAYER + LAYER_GAP) + indexInLayer * STAGGER_WITHIN_LAYER;
+
+        mesh.userData = {
+          layer: y,
+          targetPos,
+          delay,
+          startY: targetPos.y - 0.6 // start slightly below
+        };
+
         const edgesGeom = new THREE.EdgesGeometry(geom);
-        const line = new THREE.LineSegments(edgesGeom, edgeMat);
+        const line = new THREE.LineSegments(edgesGeom, edgeMat.clone());
+        line.material.transparent = true;
+        line.material.opacity = 0;
         mesh.add(line);
 
         cubeGroup.add(mesh);
+        cubeIndex++;
       }
     }
   }
@@ -400,32 +616,9 @@ function buildScene() {
   controls.target.set(0, 0, 0);
   controls.update();
 
-  if (viewMode === 'build') startBuildAnim(h);
-  else showAllLayers();
-}
-
-function showAllLayers() {
-  if (!cubeGroup) return;
-  cubeGroup.children.forEach(m => {
-    m.visible = true;
-    m.material.opacity = 1;
-  });
-}
-
-function startBuildAnim(totalLayers) {
-  if (buildTimer) clearInterval(buildTimer);
-  buildProgress = 0;
-  cubeGroup.children.forEach(m => { m.visible = false; m.material.opacity = 0; });
-  buildTimer = setInterval(() => {
-    cubeGroup.children.forEach(m => {
-      if (m.userData.layer <= buildProgress) {
-        m.visible = true;
-        m.material.opacity = 1;
-      }
-    });
-    buildProgress++;
-    if (buildProgress >= totalLayers) clearInterval(buildTimer);
-  }, 600);
+  // Start emergence animation
+  animStartTime = performance.now();
+  animRunning = true;
 }
 
 function setShape(shape) {
@@ -437,27 +630,30 @@ function setShape(shape) {
     lenLabel.textContent = 'Side Length';
     lenSlider.max = 6;
     if (parseInt(lenSlider.value) > 6) lenSlider.value = 6;
+    renderNumBtns(lenBtns, 1, 6, lenSlider);
   } else {
     wGroup.style.display = '';
     hGroup.style.display = '';
     lenLabel.textContent = 'Length';
     lenSlider.max = 8;
+    renderNumBtns(lenBtns, 1, 8, lenSlider);
   }
   onInput();
 }
 
-function setView(mode) {
-  viewMode = mode;
-  document.getElementById('btnSolid').classList.toggle('active', mode === 'solid');
-  document.getElementById('btnBuild').classList.toggle('active', mode === 'build');
-  buildScene();
-}
+let initDone = false;
 
 function onInput() {
+  if (initDone) dismissHint();
+  if (initDone) SFX.tick();
   const l = getL(), w = getW(), h = getH();
   lenVal.textContent = l;
   wVal.textContent = currentShape === 'cube' ? l : w;
   hVal.textContent = currentShape === 'cube' ? l : h;
+  highlightNumBtns(lenBtns, l);
+  highlightNumBtns(wBtns, currentShape === 'cube' ? l : w);
+  highlightNumBtns(hBtns, currentShape === 'cube' ? l : h);
+  renderer.domElement.setAttribute('aria-label', `Volume model showing ${l} by ${w} by ${h} = ${l*w*h} unit cubes`);
   buildScene();
   updateFormula(l, w, h);
   checkChallenge(l, w, h);
@@ -473,38 +669,166 @@ function updateFormula(l, w, h) {
   resultLine.textContent = `= ${vol} unit cubes`;
 }
 
+/* animate the result counter */
+function updateFormulaAnimated(l, w, h, elapsed) {
+  const total = l * w * h;
+  if (!cubeGroup) return;
+  const lastDelay = Math.max(...cubeGroup.children.map(m => m.userData.delay)) + CUBE_DURATION;
+  const progress = lastDelay > 0 ? Math.min(1, elapsed / lastDelay) : 1;
+  const displayCount = Math.round(easeOutQuart(progress) * total);
+
+  if (currentShape === 'cube') {
+    formulaLine.innerHTML = `Volume = <span class="hl-l">${l}</span> × <span class="hl-l">${l}</span> × <span class="hl-l">${l}</span>`;
+  } else {
+    formulaLine.innerHTML = `Volume = <span class="hl-l">${l}</span> × <span class="hl-w">${w}</span> × <span class="hl-h">${h}</span>`;
+  }
+  resultLine.textContent = `= ${displayCount} unit cubes`;
+}
+
 /* ── Challenge ── */
 function newChallenge() {
   const vols = [6, 8, 10, 12, 16, 18, 20, 24, 27, 30];
   targetVol = vols[Math.floor(Math.random() * vols.length)];
   challengeText.textContent = `Can you make a shape with volume = ${targetVol}?`;
   challengeStatus.textContent = '';
+  challengeStatus.className = 'status';
+  lastChallengeCorrect = false;
   checkChallenge(getL(), getW(), getH());
 }
 function checkChallenge(l, w, h) {
   if (!targetVol) return;
   const vol = l * w * h;
-  if (vol === targetVol) challengeStatus.textContent = '🎉 You got it!';
-  else challengeStatus.textContent = vol < targetVol ? '⬆️ Need more!' : '⬇️ Too much!';
+  if (vol === targetVol) {
+    challengeStatus.textContent = 'Well done!';
+    challengeStatus.className = 'status status-success';
+    if (!lastChallengeCorrect) { SFX.success(); spawnConfetti(); celebratePulse(); }
+    lastChallengeCorrect = true;
+  } else {
+    if (!lastChallengeCorrect && challengeStatus.textContent !== '') { SFX.hint(); }
+    challengeStatus.textContent = vol < targetVol ? 'Need more!' : 'Too much!';
+    challengeStatus.className = 'status status-hint';
+    lastChallengeCorrect = false;
+  }
+}
+
+/* ── Confetti ── */
+const confettiColors = ['#ff6b6b','#ff9f43','#ffd32a','#26de81','#45aaf2','#a55eea','#fd79a8','#00d2d3'];
+function spawnConfetti() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  for (let i = 0; i < 32; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.style.background = confettiColors[i % confettiColors.length];
+    el.style.left = (20 + Math.random() * 60) + '%';
+    el.style.setProperty('--drift-x', `${-70 + Math.random() * 140}px`);
+    el.style.animationDelay = (Math.random() * 0.3) + 's';
+    el.style.animationDuration = (1.2 + Math.random() * 0.8) + 's';
+    challengeBox.style.position = 'relative';
+    challengeBox.style.overflow = 'visible';
+    challengeBox.appendChild(el);
+    setTimeout(() => el.remove(), 2500);
+  }
+}
+function celebratePulse() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  challengeBox.classList.remove('celebrate');
+  void challengeBox.offsetWidth;
+  challengeBox.classList.add('celebrate');
+  setTimeout(() => challengeBox.classList.remove('celebrate'), 600);
+}
+
+/* ── Number button helpers ── */
+function renderNumBtns(container, min, max, slider) {
+  const label = slider === lenSlider ? (currentShape === 'cube' ? 'side length' : 'length')
+              : slider === wSlider ? 'width' : 'height';
+  container.innerHTML = '';
+  for (let i = min; i <= max; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'num-btn';
+    btn.textContent = i;
+    btn.setAttribute('aria-label', `Set ${label} to ${i}`);
+    btn.addEventListener('click', () => {
+      slider.value = i;
+      onInput();
+    });
+    container.appendChild(btn);
+  }
+}
+function highlightNumBtns(container, val) {
+  container.querySelectorAll('.num-btn').forEach(b => {
+    b.classList.toggle('active', parseInt(b.textContent) === val);
+  });
+}
+
+/* ── Onboarding hint ── */
+let hintEl = null;
+function dismissHint() {
+  if (hintEl) { hintEl.remove(); hintEl = null; }
+}
+function showHint() {
+  const group = document.querySelector('.slider-group');
+  hintEl = document.createElement('div');
+  hintEl.className = 'onboard-hint';
+  hintEl.textContent = 'Drag the slider or tap a number!';
+  group.appendChild(hintEl);
+  requestAnimationFrame(() => hintEl.classList.add('show'));
+  setTimeout(dismissHint, 5000);
 }
 
 /* ── Expose to global for inline onclick handlers ── */
 window.setShape = setShape;
-window.setView = setView;
 window.onInput = onInput;
 window.newChallenge = newChallenge;
 
-/* ── Render loop ── */
+/* ── Render loop with emergence animation ── */
 function tick() {
   requestAnimationFrame(tick);
+
+  if (animRunning && cubeGroup) {
+    const elapsed = performance.now() - animStartTime;
+    let allDone = true;
+
+    for (const mesh of cubeGroup.children) {
+      const d = mesh.userData;
+      const t = Math.max(0, elapsed - d.delay);
+      const progress = Math.min(1, t / CUBE_DURATION);
+      const ease = easeOutQuart(progress);
+
+      mesh.scale.setScalar(ease);
+      mesh.material.opacity = ease;
+      mesh.position.y = d.startY + (d.targetPos.y - d.startY) * ease;
+
+      // fade edges in
+      if (mesh.children[0]) {
+        mesh.children[0].material.opacity = ease;
+      }
+
+      if (progress < 1) allDone = false;
+    }
+
+    // animate counter
+    const l = getL(), w = getW(), h = getH();
+    updateFormulaAnimated(l, w, h, elapsed);
+
+    if (allDone) {
+      animRunning = false;
+      updateFormula(l, w, h); // final exact number
+    }
+  }
+
   controls.update();
   renderer.render(scene, camera);
 }
 tick();
 
 /* ── Init ── */
+renderNumBtns(lenBtns, 1, 8, lenSlider);
+renderNumBtns(wBtns, 1, 8, wSlider);
+renderNumBtns(hBtns, 1, 8, hSlider);
 onInput();
 newChallenge();
+initDone = true;
+showHint();
 </script>
 </body>
 </html>

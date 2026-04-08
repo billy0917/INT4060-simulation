@@ -180,11 +180,11 @@
   .sim-frame {
     width: 100%;
     border: none;
-    min-height: 580px;
+    min-height: min(580px, 80vh);
     display: block;
     background: var(--clay-mid);
   }
-  .sim-frame.tall { min-height: 660px; }
+  .sim-frame.tall { min-height: min(660px, 85vh); }
 
   /* ── Steps ── */
   .steps {
@@ -267,6 +267,16 @@
     line-height: 1.8;
   }
 
+  /* ── Quiz iframe ── */
+  .quiz-frame {
+    width: 100%;
+    border: none;
+    min-height: min(640px, 85vh);
+    display: block;
+    border-radius: 18px;
+    background: var(--clay-mid);
+  }
+
   /* ── Responsive ── */
   @media (max-width: 520px) {
     .nav-btn { padding: 8px 16px; font-size: .85rem; }
@@ -283,6 +293,7 @@
   <button class="nav-btn" onclick="showSection('area')">Learn: Area</button>
   <button class="nav-btn" onclick="showSection('volume')">Learn: Volume</button>
   <button class="nav-btn" onclick="showSection('summary')">Summary</button>
+  <button class="nav-btn" onclick="showSection('quiz')">Quiz</button>
 </nav>
 
 <!-- ═══════════════════════════════════════════ HOME ═══════════════════════════════════════════ -->
@@ -466,6 +477,26 @@
   <div class="clay congrats-box">
     <p><strong>Congratulations!</strong> You've completed the Area & Volume Explorer module.<br>
     Keep exploring and have fun with maths!</p>
+  </div>
+
+</section>
+
+<!-- ═══════════════════════════════════════════ QUIZ ═══════════════════════════════════════════ -->
+<section class="section" id="sec-quiz">
+
+  <h1 class="color-green">Test Your Knowledge</h1>
+  <p class="subtitle">Answer the questions below to check what you have learned</p>
+
+  <div class="clay">
+    <p>Complete this short quiz to see how well you understand area and volume. Take your time and try your best!</p>
+    <div class="sim-wrap">
+      <iframe class="quiz-frame"
+        src="https://docs.google.com/forms/d/e/1FAIpQLSdJOJdzKw5K1MR6igEdq1oolccnArlo3D6_dACVY-uEv5PauA/viewform?embedded=true"
+        allow="fullscreen"
+        loading="lazy"
+        title="Area and Volume Quiz">
+      </iframe>
+    </div>
   </div>
 
 </section>
