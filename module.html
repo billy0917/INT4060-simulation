@@ -73,6 +73,29 @@
     animation: fadeUp .35s ease;
   }
   .section.active { display: block; }
+  .section.full-width {
+    max-width: 100%;
+    padding: 6px 0 40px;
+  }
+  .section.full-width .clay {
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+  .section.full-width > h1,
+  .section.full-width > .subtitle {
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 16px;
+  }
+  .section.full-width .sim-wrap {
+    max-width: 100%;
+    border-radius: 0;
+    margin: 4px 0;
+  }
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(16px); }
     to { opacity: 1; transform: translateY(0); }
@@ -180,14 +203,14 @@
   .sim-frame {
     width: 100%;
     border: none;
-    height: calc(100dvh - 95px);
-    min-height: 600px;
+    height: calc(100dvh - 80px);
+    min-height: 550px;
     display: block;
     background: var(--clay-mid);
   }
   .sim-frame.tall {
-    height: calc(100dvh - 95px);
-    min-height: 650px;
+    height: calc(100dvh - 80px);
+    min-height: 550px;
   }
 
   /* ── Steps ── */
@@ -432,7 +455,7 @@
 </section>
 
 <!-- ═══════════════════════════════════════════ AREA ═══════════════════════════════════════════ -->
-<section class="section" id="sec-area">
+<section class="section full-width" id="sec-area">
 
   <h1 class="color-area">Exploring Area</h1>
   <p class="subtitle">Learn how to measure the space inside flat shapes</p>
@@ -449,17 +472,13 @@
     <p>For example, a rectangle with width 5 and height 3 has an area of <strong>5 × 3 = 15 square units</strong>.</p>
   </div>
 
-  <div class="clay">
-    <h2>Try the Simulator</h2>
-    <p>Drag the sliders to change the shape. Watch the colourful unit squares fill up and count them. Toggle <strong>Show Perimeter</strong> to see the boundary too!</p>
-    <div class="sim-wrap">
-      <iframe class="sim-frame"
-        data-src="https://billy0917.github.io/INT4060-simulation/area-simulator/"
-        allow="fullscreen"
-        loading="lazy"
-        title="Area Explorer Simulator">
-      </iframe>
-    </div>
+  <div class="sim-wrap">
+    <iframe class="sim-frame"
+      data-src="https://billy0917.github.io/INT4060-simulation/area-simulator/"
+      allow="fullscreen"
+      loading="lazy"
+      title="Area Explorer Simulator">
+    </iframe>
   </div>
 
   <div class="clay">
@@ -485,7 +504,7 @@
 </section>
 
 <!-- ═══════════════════════════════════════════ VOLUME ═══════════════════════════════════════════ -->
-<section class="section" id="sec-volume">
+<section class="section full-width" id="sec-volume">
 
   <h1 class="color-vol">Exploring Volume</h1>
   <p class="subtitle">Learn how to measure the space inside 3D shapes</p>
@@ -500,17 +519,13 @@
     <p>For example, a cuboid with length 4, width 3, and height 2 has a volume of <strong>4 × 3 × 2 = 24 unit cubes</strong>.</p>
   </div>
 
-  <div class="clay">
-    <h2>Try the Simulator</h2>
-    <p>Drag the sliders to change the shape. Rotate the 3D model by dragging on it. Try "Build Layer by Layer" to watch the cubes stack up.</p>
-    <div class="sim-wrap">
-      <iframe class="sim-frame tall"
-        data-src="https://billy0917.github.io/INT4060-simulation/volume-simulator/"
-        allow="fullscreen"
-        loading="lazy"
-        title="Volume Explorer Simulator">
-      </iframe>
-    </div>
+  <div class="sim-wrap">
+    <iframe class="sim-frame tall"
+      data-src="https://billy0917.github.io/INT4060-simulation/volume-simulator/"
+      allow="fullscreen"
+      loading="lazy"
+      title="Volume Explorer Simulator">
+    </iframe>
   </div>
 
   <div class="clay">
