@@ -67,8 +67,8 @@
   /* ── Sections ── */
   .section {
     display: none;
-    padding: 20px 20px 40px;
-    max-width: 860px;
+    padding: 6px 16px 40px;
+    max-width: 900px;
     margin: 0 auto;
     animation: fadeUp .35s ease;
   }
@@ -180,11 +180,15 @@
   .sim-frame {
     width: 100%;
     border: none;
-    min-height: min(580px, 80vh);
+    height: calc(100dvh - 95px);
+    min-height: 600px;
     display: block;
     background: var(--clay-mid);
   }
-  .sim-frame.tall { min-height: min(660px, 85vh); }
+  .sim-frame.tall {
+    height: calc(100dvh - 95px);
+    min-height: 650px;
+  }
 
   /* ── Steps ── */
   .steps {
@@ -307,9 +311,10 @@
     justify-content: center;
     align-items: center;
     gap: 0;
-    padding: 0 20px 10px;
+    padding: 4px 20px 10px;
     max-width: 600px;
     margin: 0 auto;
+    overflow: visible;
   }
   .progress-step {
     display: flex;
@@ -346,6 +351,7 @@
     background: var(--clay-mid);
     box-shadow: var(--shadow-in);
     transition: background .3s;
+    margin: 0 4px;
   }
   .progress-line.done {
     background: var(--accent-green);

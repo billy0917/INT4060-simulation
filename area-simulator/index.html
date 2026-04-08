@@ -30,20 +30,42 @@
     font-family: 'Nunito', 'Segoe UI', sans-serif;
     background: var(--bg);
     color: var(--text);
-    min-height: 100vh;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  /* ── Horizontal two-column layout ── */
+  .layout {
+    display: flex;
+    height: 100vh;
+    gap: 0;
+  }
+  .visual-panel {
+    flex: 1 1 55%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    min-width: 0;
+  }
+  .info-panel {
+    flex: 1 1 45%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px 16px;
-    overflow-x: hidden;
+    padding: 16px 16px;
+    overflow-y: auto;
+    min-width: 0;
+    gap: 10px;
   }
 
   h1 {
-    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-size: clamp(1.2rem, 2.5vw, 1.6rem);
     font-weight: 800;
     color: var(--accent-dark);
     text-align: center;
-    margin-bottom: 14px;
+    margin-bottom: 6px;
     letter-spacing: -.02em;
   }
 
@@ -79,13 +101,11 @@
     background: var(--clay-light);
     border-radius: var(--radius);
     box-shadow: var(--shadow-out);
-    padding: 20px 28px;
+    padding: 14px 18px;
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 14px;
     justify-content: center;
-    margin-bottom: 16px;
-    max-width: 560px;
     width: 100%;
   }
   .slider-group {
@@ -173,15 +193,16 @@
     border-radius: var(--radius);
     box-shadow: var(--shadow-out);
     padding: 14px;
-    margin-bottom: 16px;
     display: flex;
     justify-content: center;
-    max-width: 560px;
     width: 100%;
+    max-width: 100%;
   }
   canvas {
     display: block;
     border-radius: 14px;
+    width: 100%;
+    height: auto;
   }
 
   /* ── Formula ── */
@@ -189,9 +210,8 @@
     background: var(--accent-light);
     border-radius: var(--radius);
     box-shadow: var(--shadow-in);
-    padding: 18px 28px;
+    padding: 12px 18px;
     text-align: center;
-    max-width: 560px;
     width: 100%;
   }
   .formula-box .formula {
@@ -213,11 +233,9 @@
     background: #dddcf0;
     border-radius: var(--radius);
     box-shadow: var(--shadow-in);
-    padding: 14px 28px;
+    padding: 10px 18px;
     text-align: center;
-    max-width: 560px;
     width: 100%;
-    margin-top: 10px;
     transition: opacity .3s, max-height .3s;
     overflow: hidden;
   }
@@ -231,8 +249,6 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
-    margin-top: 10px;
-    max-width: 560px;
     width: 100%;
   }
   .peri-toggle label { font-weight: 700; font-size: .95rem; color: var(--text-soft); cursor: pointer; }
@@ -263,9 +279,7 @@
     display: flex;
     gap: 8px;
     justify-content: center;
-    max-width: 560px;
     width: 100%;
-    margin-top: 10px;
   }
   .diff-btn {
     font-family: inherit;
@@ -301,14 +315,12 @@
 
   /* ── Real world context ── */
   .real-world {
-    font-size: .88rem;
+    font-size: .85rem;
     color: var(--text-soft);
     font-weight: 600;
     text-align: center;
-    max-width: 560px;
     width: 100%;
-    margin-top: 8px;
-    padding: 10px 16px;
+    padding: 8px 12px;
     background: var(--clay-light);
     border-radius: 16px;
     box-shadow: var(--shadow-in);
@@ -316,13 +328,11 @@
 
   /* ── Challenge ── */
   .challenge-box {
-    margin-top: 16px;
     background: var(--green-light);
     border-radius: var(--radius);
     box-shadow: var(--shadow-in);
-    padding: 18px 24px;
+    padding: 14px 18px;
     text-align: center;
-    max-width: 560px;
     width: 100%;
   }
   .challenge-box .challenge-title {
@@ -430,10 +440,12 @@
     50%      { transform: translateX(-50%) translateY(-6px); }
   }
 
-  /* ── Responsive ── */
-  @media (max-width: 480px) {
-    body { padding: 14px 10px; }
-    .controls { padding: 16px 18px; }
+  /* ── Responsive: fall back to vertical on narrow/mobile ── */
+  @media (max-width: 700px) {
+    body { height: auto; overflow: auto; }
+    .layout { flex-direction: column; height: auto; }
+    .visual-panel { flex: none; padding: 10px; }
+    .info-panel { flex: none; padding: 10px; overflow-y: visible; }
   }
   @media (max-width: 360px) {
     .num-btn { width: 32px; height: 32px; font-size: .85rem; border-radius: 10px; }
@@ -441,68 +453,70 @@
 </style>
 </head>
 <body>
+<div class="layout">
 
-<h1>Area Explorer</h1>
-
-<!-- Shape selector -->
-<div class="tabs">
-  <button class="tab-btn active" data-shape="rectangle" onclick="setShape('rectangle')">Rectangle</button>
-  <button class="tab-btn" data-shape="square" onclick="setShape('square')">Square</button>
-</div>
-
-<!-- Sliders + number buttons -->
-<div class="controls">
-  <div class="slider-group">
-    <label id="widthLabel" for="widthSlider">Width</label>
-    <input type="range" id="widthSlider" min="1" max="12" value="4" aria-label="Width: 1 to 12" oninput="onSliderChange()">
-    <span class="slider-val" id="widthVal">4</span>
-    <div class="num-btns" id="widthBtns"></div>
+  <!-- LEFT: Visualization -->
+  <div class="visual-panel">
+    <div class="canvas-wrap">
+      <canvas id="areaCanvas" width="520" height="400" role="img" aria-label="Area grid showing unit squares"></canvas>
+    </div>
   </div>
-  <div class="slider-group" id="heightGroup">
-    <label for="heightSlider">Height</label>
-    <input type="range" id="heightSlider" min="1" max="10" value="3" aria-label="Height: 1 to 10" oninput="onSliderChange()">
-    <span class="slider-val" id="heightVal">3</span>
-    <div class="num-btns" id="heightBtns"></div>
-  </div>
-</div>
 
-<!-- Visualization canvas -->
-<div class="canvas-wrap">
-  <canvas id="areaCanvas" width="520" height="400" role="img" aria-label="Area grid showing unit squares"></canvas>
-</div>
+  <!-- RIGHT: Controls + Info -->
+  <div class="info-panel">
+    <h1>Area Explorer</h1>
 
-<!-- Formula display -->
-<div class="formula-box" id="formulaBox">
-  <div class="formula" id="formulaLine"></div>
-  <div class="result" id="resultLine"></div>
-  <div class="formula-tip" id="formulaTip"></div>
-</div>
+    <div class="tabs">
+      <button class="tab-btn active" data-shape="rectangle" onclick="setShape('rectangle')">Rectangle</button>
+      <button class="tab-btn" data-shape="square" onclick="setShape('square')">Square</button>
+    </div>
 
-<!-- Perimeter toggle + display -->
-<div class="peri-toggle">
-  <label for="periToggle">Show Perimeter</label>
-  <div class="toggle-switch" id="periToggle" role="checkbox" aria-checked="false" tabindex="0" onclick="togglePerimeter()" onkeydown="if(event.key===' '||event.key==='Enter'){togglePerimeter();event.preventDefault();}"></div>
-</div>
-<div class="peri-box hidden" id="periBox">
-  <div class="formula" id="periFormula"></div>
-  <div class="result" id="periResult"></div>
-</div>
+    <div class="controls">
+      <div class="slider-group">
+        <label id="widthLabel" for="widthSlider">Width</label>
+        <input type="range" id="widthSlider" min="1" max="12" value="4" aria-label="Width: 1 to 12" oninput="onSliderChange()">
+        <span class="slider-val" id="widthVal">4</span>
+        <div class="num-btns" id="widthBtns"></div>
+      </div>
+      <div class="slider-group" id="heightGroup">
+        <label for="heightSlider">Height</label>
+        <input type="range" id="heightSlider" min="1" max="10" value="3" aria-label="Height: 1 to 10" oninput="onSliderChange()">
+        <span class="slider-val" id="heightVal">3</span>
+        <div class="num-btns" id="heightBtns"></div>
+      </div>
+    </div>
 
-<!-- Real world context -->
-<div class="real-world" id="realWorld"></div>
+    <div class="formula-box" id="formulaBox">
+      <div class="formula" id="formulaLine"></div>
+      <div class="result" id="resultLine"></div>
+      <div class="formula-tip" id="formulaTip"></div>
+    </div>
 
-<!-- Difficulty + Challenge mode -->
-<div class="difficulty-bar">
-  <button class="diff-btn active-easy" data-diff="easy" onclick="setDifficulty('easy')">Easy</button>
-  <button class="diff-btn" data-diff="medium" onclick="setDifficulty('medium')">Medium</button>
-  <button class="diff-btn" data-diff="hard" onclick="setDifficulty('hard')">Hard</button>
-</div>
-<div class="challenge-box">
-  <div class="challenge-title">Challenge</div>
-  <div class="challenge-text" id="challengeText"></div>
-  <div class="status" id="challengeStatus" role="status" aria-live="polite"></div>
-  <button class="new-challenge-btn" onclick="newChallenge()">New Challenge</button>
-</div>
+    <div class="peri-toggle">
+      <label for="periToggle">Show Perimeter</label>
+      <div class="toggle-switch" id="periToggle" role="checkbox" aria-checked="false" tabindex="0" onclick="togglePerimeter()" onkeydown="if(event.key===' '||event.key==='Enter'){togglePerimeter();event.preventDefault();}"></div>
+    </div>
+    <div class="peri-box hidden" id="periBox">
+      <div class="formula" id="periFormula"></div>
+      <div class="result" id="periResult"></div>
+    </div>
+
+    <div class="real-world" id="realWorld"></div>
+
+    <div class="difficulty-bar">
+      <button class="diff-btn active-easy" data-diff="easy" onclick="setDifficulty('easy')">Easy</button>
+      <button class="diff-btn" data-diff="medium" onclick="setDifficulty('medium')">Medium</button>
+      <button class="diff-btn" data-diff="hard" onclick="setDifficulty('hard')">Hard</button>
+    </div>
+    <div class="challenge-box">
+      <div class="challenge-title">Challenge</div>
+      <div class="challenge-text" id="challengeText"></div>
+      <div class="status" id="challengeStatus" role="status" aria-live="polite"></div>
+      <button class="new-challenge-btn" onclick="newChallenge()">New Challenge</button>
+    </div>
+
+  </div><!-- /info-panel -->
+</div><!-- /layout -->
 
 <script>
 const canvas = document.getElementById('areaCanvas');
@@ -931,9 +945,9 @@ function celebratePulse() {
 /* ── Responsive canvas ── */
 function resizeCanvas() {
   const wrap = canvas.parentElement;
-  const size = Math.min(wrap.clientWidth - 24, 520);
+  const size = Math.min(wrap.clientWidth - 28, 600);
   canvas.width = size;
-  canvas.height = Math.round(size * 0.77);
+  canvas.height = Math.round(size * 0.85);
   onSliderChange();
 }
 window.addEventListener('resize', resizeCanvas);

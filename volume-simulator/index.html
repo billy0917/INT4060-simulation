@@ -30,20 +30,43 @@
     font-family: 'Nunito', 'Segoe UI', sans-serif;
     background: var(--bg);
     color: var(--text);
-    min-height: 100vh;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  /* ── Horizontal two-column layout ── */
+  .layout {
+    display: flex;
+    height: 100vh;
+    gap: 0;
+  }
+  .visual-panel {
+    flex: 1 1 55%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px 16px;
-    overflow-x: hidden;
+    justify-content: center;
+    padding: 16px;
+    min-width: 0;
+  }
+  .info-panel {
+    flex: 1 1 45%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 16px;
+    overflow-y: auto;
+    min-width: 0;
+    gap: 10px;
   }
 
   h1 {
-    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-size: clamp(1.2rem, 2.5vw, 1.6rem);
     font-weight: 800;
     color: var(--accent-dark);
     text-align: center;
-    margin-bottom: 14px;
+    margin-bottom: 6px;
     letter-spacing: -.02em;
   }
 
@@ -79,13 +102,11 @@
     background: var(--clay-light);
     border-radius: var(--radius);
     box-shadow: var(--shadow-out);
-    padding: 20px 24px;
+    padding: 14px 18px;
     display: flex;
     flex-wrap: wrap;
-    gap: 16px;
+    gap: 12px;
     justify-content: center;
-    margin-bottom: 16px;
-    max-width: 600px;
     width: 100%;
   }
   .slider-group {
@@ -172,8 +193,6 @@
     background: var(--clay-light);
     border-radius: var(--radius);
     box-shadow: var(--shadow-out);
-    margin-bottom: 16px;
-    max-width: 600px;
     width: 100%;
     position: relative;
     overflow: hidden;
@@ -200,9 +219,8 @@
     background: var(--accent-light);
     border-radius: var(--radius);
     box-shadow: var(--shadow-in);
-    padding: 18px 24px;
+    padding: 12px 18px;
     text-align: center;
-    max-width: 600px;
     width: 100%;
   }
   .formula-box .formula {
@@ -222,13 +240,11 @@
 
   /* ── Challenge ── */
   .challenge-box {
-    margin-top: 16px;
     background: var(--green-light);
     border-radius: var(--radius);
     box-shadow: var(--shadow-in);
-    padding: 18px 24px;
+    padding: 14px 18px;
     text-align: center;
-    max-width: 600px;
     width: 100%;
   }
   .challenge-box .challenge-title {
@@ -329,10 +345,12 @@
     50%      { opacity: 1; transform: translateX(-50%) scale(1.05); }
   }
 
-  /* ── Responsive ── */
-  @media (max-width: 480px) {
-    body { padding: 14px 10px; }
-    .controls { padding: 16px 16px; }
+  /* ── Responsive: fall back to vertical on narrow/mobile ── */
+  @media (max-width: 700px) {
+    body { height: auto; overflow: auto; }
+    .layout { flex-direction: column; height: auto; }
+    .visual-panel { flex: none; padding: 10px; }
+    .info-panel { flex: none; padding: 10px; overflow-y: visible; }
   }
   @media (max-width: 360px) {
     .num-btn { width: 32px; height: 32px; font-size: .85rem; border-radius: 10px; }
@@ -371,9 +389,7 @@
     display: flex;
     gap: 8px;
     justify-content: center;
-    max-width: 600px;
     width: 100%;
-    margin-top: 10px;
   }
   .diff-btn {
     font-family: inherit;
@@ -409,59 +425,67 @@
 </style>
 </head>
 <body>
+<div class="layout">
 
-<h1>Volume Explorer</h1>
-
-<div class="tabs">
-  <button class="tab-btn active" data-shape="cuboid" onclick="setShape('cuboid')">Cuboid</button>
-  <button class="tab-btn" data-shape="cube" onclick="setShape('cube')">Cube</button>
-</div>
-
-<div class="controls">
-  <div class="slider-group">
-    <label id="lenLabel" for="lenSlider">Length</label>
-    <input type="range" id="lenSlider" min="1" max="8" value="4" aria-label="Length: 1 to 8" oninput="onInput()">
-    <span class="slider-val" id="lenVal">4</span>
-    <div class="num-btns" id="lenBtns"></div>
+  <!-- LEFT: 3D Visualization -->
+  <div class="visual-panel">
+    <div class="viewport" id="viewport">
+      <div class="drag-hint" id="dragHint">Drag to rotate · Arrow keys to spin</div>
+    </div>
+    <div class="layer-counter" id="layerCounter"></div>
+    <button class="layer-btn" id="layerBtn" onclick="startLayerByLayer()">Build Layer by Layer</button>
   </div>
-  <div class="slider-group" id="wGroup">
-    <label for="wSlider">Width</label>
-    <input type="range" id="wSlider" min="1" max="8" value="3" aria-label="Width: 1 to 8" oninput="onInput()">
-    <span class="slider-val" id="wVal">3</span>
-    <div class="num-btns" id="wBtns"></div>
-  </div>
-  <div class="slider-group" id="hGroup">
-    <label for="hSlider">Height</label>
-    <input type="range" id="hSlider" min="1" max="8" value="2" aria-label="Height: 1 to 8" oninput="onInput()">
-    <span class="slider-val" id="hVal">2</span>
-    <div class="num-btns" id="hBtns"></div>
-  </div>
-</div>
 
-<div class="viewport" id="viewport">
-  <div class="drag-hint" id="dragHint">Drag to rotate · Arrow keys to spin</div>
-</div>
+  <!-- RIGHT: Controls + Info -->
+  <div class="info-panel">
+    <h1>Volume Explorer</h1>
 
-<div class="layer-counter" id="layerCounter"></div>
-<button class="layer-btn" id="layerBtn" onclick="startLayerByLayer()">Build Layer by Layer</button>
+    <div class="tabs">
+      <button class="tab-btn active" data-shape="cuboid" onclick="setShape('cuboid')">Cuboid</button>
+      <button class="tab-btn" data-shape="cube" onclick="setShape('cube')">Cube</button>
+    </div>
 
-<div class="formula-box">
-  <div class="formula" id="formulaLine"></div>
-  <div class="result" id="resultLine"></div>
-  <div class="formula-tip" id="formulaTip"></div>
-</div>
+    <div class="controls">
+      <div class="slider-group">
+        <label id="lenLabel" for="lenSlider">Length</label>
+        <input type="range" id="lenSlider" min="1" max="8" value="4" aria-label="Length: 1 to 8" oninput="onInput()">
+        <span class="slider-val" id="lenVal">4</span>
+        <div class="num-btns" id="lenBtns"></div>
+      </div>
+      <div class="slider-group" id="wGroup">
+        <label for="wSlider">Width</label>
+        <input type="range" id="wSlider" min="1" max="8" value="3" aria-label="Width: 1 to 8" oninput="onInput()">
+        <span class="slider-val" id="wVal">3</span>
+        <div class="num-btns" id="wBtns"></div>
+      </div>
+      <div class="slider-group" id="hGroup">
+        <label for="hSlider">Height</label>
+        <input type="range" id="hSlider" min="1" max="8" value="2" aria-label="Height: 1 to 8" oninput="onInput()">
+        <span class="slider-val" id="hVal">2</span>
+        <div class="num-btns" id="hBtns"></div>
+      </div>
+    </div>
 
-<div class="difficulty-bar">
-  <button class="diff-btn active-easy" data-diff="easy" onclick="setDifficulty('easy')">Easy</button>
-  <button class="diff-btn" data-diff="medium" onclick="setDifficulty('medium')">Medium</button>
-  <button class="diff-btn" data-diff="hard" onclick="setDifficulty('hard')">Hard</button>
-</div>
-<div class="challenge-box">
-  <div class="challenge-title">Challenge</div>
-  <div class="challenge-text" id="challengeText"></div>
-  <div class="status" id="challengeStatus" role="status" aria-live="polite"></div>
-  <button class="new-challenge-btn" onclick="newChallenge()">New Challenge</button>
-</div>
+    <div class="formula-box">
+      <div class="formula" id="formulaLine"></div>
+      <div class="result" id="resultLine"></div>
+      <div class="formula-tip" id="formulaTip"></div>
+    </div>
+
+    <div class="difficulty-bar">
+      <button class="diff-btn active-easy" data-diff="easy" onclick="setDifficulty('easy')">Easy</button>
+      <button class="diff-btn" data-diff="medium" onclick="setDifficulty('medium')">Medium</button>
+      <button class="diff-btn" data-diff="hard" onclick="setDifficulty('hard')">Hard</button>
+    </div>
+    <div class="challenge-box">
+      <div class="challenge-title">Challenge</div>
+      <div class="challenge-text" id="challengeText"></div>
+      <div class="status" id="challengeStatus" role="status" aria-live="polite"></div>
+      <button class="new-challenge-btn" onclick="newChallenge()">New Challenge</button>
+    </div>
+
+  </div><!-- /info-panel -->
+</div><!-- /layout -->
 
 <!-- Three.js via ES module import map -->
 <script type="importmap">
@@ -675,7 +699,7 @@ document.addEventListener('keydown', (e) => {
 /* ── Resize ── */
 function resizeViewport() {
   const w = viewportEl.clientWidth;
-  const h = Math.round(w * 0.7);
+  const h = Math.round(w * 0.85);
   renderer.setSize(w, h);
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
