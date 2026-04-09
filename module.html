@@ -328,6 +328,24 @@
     background: var(--clay-mid);
   }
 
+  /* ── YouTube embed ── */
+  .yt-wrap {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(0,0,0,.12);
+    margin-top: 12px;
+  }
+  .yt-wrap iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
   /* ── Progress Bar ── */
   .progress-bar {
     display: flex;
@@ -682,6 +700,17 @@
     </div>
   </div>
 
+  <div class="clay">
+    <h2>🎥 Watch &amp; Learn</h2>
+    <p>Watch this short video to see how area works before trying the simulator!</p>
+    <div class="yt-wrap">
+      <iframe src="https://www.youtube.com/embed/8cz_IB65pZM"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen loading="lazy" title="Area calculation tutorial">
+      </iframe>
+    </div>
+  </div>
+
   <div class="sim-wrap">
     <iframe class="sim-frame"
       data-src="https://billy0917.github.io/INT4060-simulation/area-simulator/"
@@ -755,6 +784,17 @@
     <div class="pill-row">
       <span class="pill vol">📦 Cuboid: Volume = l × w × h</span>
       <span class="pill vol">🧊 Cube: Volume = side³</span>
+    </div>
+  </div>
+
+  <div class="clay">
+    <h2>🎥 Watch &amp; Learn</h2>
+    <p>Watch this short video to see how volume works before trying the simulator!</p>
+    <div class="yt-wrap">
+      <iframe src="https://www.youtube.com/embed/NohkEnzkaN0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen loading="lazy" title="Volume calculation tutorial">
+      </iframe>
     </div>
   </div>
 
