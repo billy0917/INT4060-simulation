@@ -393,29 +393,75 @@
     .nav-btn { padding: 8px 12px; font-size: .8rem; min-height: 44px; }
   }
 
-  /* ── Kid-friendly visual grids ── */
+  /* ── Flip-card objective grid ── */
   .obj-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
     margin-top: 16px;
+    perspective: 900px;
   }
-  .obj-item {
+  .flip-card {
+    height: 130px;
+    cursor: pointer;
+    perspective: 600px;
+  }
+  .flip-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform .55s cubic-bezier(.4,.2,.2,1);
+    transform-style: preserve-3d;
+  }
+  .flip-card:hover .flip-inner { transform: rotateY(180deg) scale(1.06); }
+  .flip-front, .flip-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border-radius: 18px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     text-align: center;
-    background: var(--clay-mid);
-    border-radius: 16px;
-    padding: 18px 12px;
-    box-shadow: var(--shadow-in);
+    padding: 16px 14px;
+    font-weight: 700;
     font-size: .92rem;
     line-height: 1.5;
-    font-weight: 600;
   }
-  .obj-icon {
-    font-size: 2rem;
-    margin-bottom: 6px;
+  .flip-front {
+    background: var(--clay-mid);
+    box-shadow: var(--shadow-in);
+    transition: box-shadow .3s;
+  }
+  .flip-card:hover .flip-front { box-shadow: 0 6px 20px rgba(0,0,0,.12); }
+  .flip-front .obj-icon { font-size: 2.2rem; margin-bottom: 6px; }
+  .flip-back {
+    transform: rotateY(180deg);
+    color: #fff;
+    font-size: 1rem;
+    line-height: 1.6;
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(0,0,0,.18);
+  }
+  /* Decorative shine streak */
+  .flip-back::before {
+    content: '';
+    position: absolute;
+    top: -40%; left: -40%;
+    width: 80%; height: 80%;
+    background: radial-gradient(circle, rgba(255,255,255,.25) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .flip-back.bg-area {
+    background: linear-gradient(135deg, #e8956e 0%, #d4856a 50%, #c2704f 100%);
+  }
+  .flip-back.bg-vol {
+    background: linear-gradient(135deg, #9597d9 0%, #7b7fc7 50%, #6264b4 100%);
+  }
+  .flip-back.bg-green {
+    background: linear-gradient(135deg, #82c496 0%, #6da87e 50%, #589468 100%);
   }
 
   /* ── Icon list (emoji bullets) ── */
@@ -488,6 +534,7 @@
 
   @media (max-width: 520px) {
     .obj-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .flip-card { height: 110px; }
     .takeaway-grid, .next-grid { grid-template-columns: 1fr; }
     .illust-svg { max-width: 140px; }
   }
@@ -563,12 +610,30 @@
   <div class="clay">
     <h2 class="color-green">🎯 What You'll Learn</h2>
     <div class="obj-grid">
-      <div class="obj-item"><span class="obj-icon">🟧</span> What <strong>area</strong> means</div>
-      <div class="obj-item"><span class="obj-icon">🔲</span> What <strong>perimeter</strong> means</div>
-      <div class="obj-item"><span class="obj-icon">🟦</span> What <strong>volume</strong> means</div>
-      <div class="obj-item"><span class="obj-icon">✖️</span> Area = width × height</div>
-      <div class="obj-item"><span class="obj-icon">📏</span> Perimeter = 2 × (w + h)</div>
-      <div class="obj-item"><span class="obj-icon">📐</span> Volume = l × w × h</div>
+      <div class="flip-card"><div class="flip-inner">
+        <div class="flip-front"><span class="obj-icon">🟧</span>Area</div>
+        <div class="flip-back bg-area">The <strong>space inside</strong> a flat shape, counted in squares</div>
+      </div></div>
+      <div class="flip-card"><div class="flip-inner">
+        <div class="flip-front"><span class="obj-icon">🔲</span>Perimeter</div>
+        <div class="flip-back bg-area">The <strong>distance around</strong> the outside edge of a shape</div>
+      </div></div>
+      <div class="flip-card"><div class="flip-inner">
+        <div class="flip-front"><span class="obj-icon">🟦</span>Volume</div>
+        <div class="flip-back bg-vol">The <strong>space inside</strong> a 3D shape, counted in cubes</div>
+      </div></div>
+      <div class="flip-card"><div class="flip-inner">
+        <div class="flip-front"><span class="obj-icon">✖️</span>Area Formula</div>
+        <div class="flip-back bg-area"><strong>width × height</strong></div>
+      </div></div>
+      <div class="flip-card"><div class="flip-inner">
+        <div class="flip-front"><span class="obj-icon">📏</span>Perimeter Formula</div>
+        <div class="flip-back bg-green"><strong>2 × (width + height)</strong></div>
+      </div></div>
+      <div class="flip-card"><div class="flip-inner">
+        <div class="flip-front"><span class="obj-icon">📐</span>Volume Formula</div>
+        <div class="flip-back bg-vol"><strong>length × width × height</strong></div>
+      </div></div>
     </div>
   </div>
 
